@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto&display=swap');
+@import "tailwindcss";
+
+@theme {
+    --font-inter: "Inter", sans-serif;
+    --color-black-custom: #565656;
+    --color-grey-custom: #F4F4F4;
+    --color-green-strong-custom: #0E6E1E;
+    --color-green-custom: #34B149;
+    --color-orange-custom: #DF7205;
+    --color-red-custom: #D81818;
+    --color-white: #fff;
+}
