@@ -1,46 +1,39 @@
 <template>
     <div class="mt-6 ml-6 mr-6">
-        <div class="flex items-center justify-between mb-3">
-            <h2 class="text-xl font-semibold text-gray-700">Temuan Terbaru</h2>
-            <div class="flex items-center space-x-4">
-                <button class="text-green-600 font-medium hover:underline">
-                    Lihat Semua →
-                </button>
-                <button class="px-4 py-2 bg-green-600 text-white rounded-xl shadow">
-                    Tambah
-                </button>
-            </div>
-        </div>
-
-        <div class="space-y-4 pr-2">
+        <div class="space-y-4">
             <div v-for="item in temuan" :key="item.id"
-                class="bg-white shadow rounded-2xl p-4 border flex flex-col space-y-1">
+                class="min-h-8 bg-white shadow rounded-2xl px-3 py-2 border flex flex-row justify-between">
                 <!-- Judul -->
-                <h3 class="font-semibold text-gray-800 leading-tight line-clamp-2">
-                    {{ item.judul }}
-                </h3>
+                <dev class="flex flex-col">
+                    <h3 class="font-semibold text-gray-800 leading-tight line-clamp-2 min-h-10 hover:cursor-pointer">
+                        {{ item.judul }}
+                    </h3>
+                    <!-- Informasi Baris -->
+                    <div class="flex items-center text-sm text-gray-500 space-x-4 mt-3">
+                        <span class="flex items-center">
+                            <img :src="icCalendar" class="w-4 h-4 mr-1" />
+                            {{ item.tanggal }}
+                        </span>
 
-                <!-- Informasi Baris -->
-                <div class="flex items-center text-sm text-gray-500 space-x-4 mt-1">
-                    <span class="flex items-center">
-                        <img :src="icCalendar" class="w-4 h-4 mr-1" />
-                        {{ item.tanggal }}
-                    </span>
+                        <span class="flex items-center">
+                            <img :src="icPersonSelected" class="w-4 h-4 mr-1" />
 
-                    <span class="flex items-center">
-                        <img :src="icPersonSelected" class="w-4 h-4 mr-1" />
+                            {{ item.nama }}
+                        </span>
 
-                        {{ item.nama }}
-                    </span>
+                        <span class="flex items-center">
+                            {{ item.divisi }}
+                        </span>
+                    </div>
+                </dev>
 
-                    <span class="flex items-center">
-                        {{ item.divisi }}
-                    </span>
-                </div>
+
+
 
                 <!-- Status badge -->
                 <div class="mt-2">
-                    <span class="px-3 py-1 text-sm rounded-full font-medium" :class="statusClass(item.status)">
+                    <span class="px-3 py-1 text-sm rounded-full font-medium hover:cursor-pointer"
+                        :class="statusClass(item.status)">
                         {{ item.status }}
                     </span>
                 </div>
@@ -48,8 +41,8 @@
         </div>
 
         <div class="flex justify-end mt-6">
-            <button class="text-green-600 font-medium hover:underline">
-                Lihat Semua →
+            <button class="text-green-600 font-medium underline hover:cursor-pointer">
+                Lihat Semua
             </button>
         </div>
     </div>
@@ -70,7 +63,7 @@ const temuan = [
     },
     {
         id: 2,
-        judul: "Rumput panjang di depan main office",
+        judul: "Rumput panjang di depan main office menyangko nyangko dah, sampai mengengait orang lewat, bahyo ado ulo muwo, kato siapo tak meninggal",
         tanggal: "Ahad, 02 Nov 2025",
         nama: "Firdaus",
         divisi: "ICT to Electric",
@@ -151,8 +144,8 @@ const statusClass = (status) => {
             return "bg-yellow-100 text-yellow-700 border border-yellow-300"
         case "Tunda":
             return "bg-red-100 text-red-700 border border-red-300"
-        case "Draft":
-            return "bg-gray-200 text-gray-700 border border-gray-300"
+        case "Draf":
+            return "bg-gray-100 text-gray-700 border border-gray-300"
         default:
             return ""
     }

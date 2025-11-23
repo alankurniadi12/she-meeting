@@ -3,7 +3,7 @@
         <div class="overflow-x-auto">
             <div class="flex space-x-8 w-max">
                 <!-- Total -->
-                <div class="w-55 h-35 bg-green-custom rounded-3xl overflow-hidden">
+                <div class="w-55 h-35 bg-green-custom rounded-3xl overflow-hidden hover:cursor-pointer">
                     <div class="p-4 w-full">
                         <div class="flex items-center justify-between ">
                             <h1 class="text-white font-semibold text-lg flex-1 break-words">Total</h1>
@@ -17,7 +17,7 @@
                 </div>
 
                 <!-- Selesai  -->
-                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden">
+                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden hover:cursor-pointer">
                     <div class="p-4 w-full">
                         <div class="flex items-center justify-between ">
                             <h1 class="text-green-strong-custom font-semibold text-lg flex-1 break-words">Selesai</h1>
@@ -31,7 +31,7 @@
                 </div>
 
                 <!-- Proses  -->
-                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden">
+                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden hover:cursor-pointer">
                     <div class="p-4 w-full">
                         <div class="flex items-center justify-between ">
                             <h1 class="text-orange-custom font-semibold text-lg flex-1 break-words">Proses</h1>
@@ -45,7 +45,7 @@
                 </div>
 
                 <!-- Tunda  -->
-                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden">
+                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden hover:cursor-pointer">
                     <div class="p-4 w-full">
                         <div class="flex items-center justify-between ">
                             <h1 class="text-red-custom font-semibold text-lg flex-1 break-words">Tunda</h1>

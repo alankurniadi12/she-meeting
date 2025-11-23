@@ -11,53 +11,76 @@
         <nav class="w-full space-y-3 pt-10">
 
             <!-- Beranda -->
-            <a href="#" class="group flex items-center gap-3  py-2">
-                <div
-                    class="w-1.5 h-10 rounded-r-lg bg-grey-custom opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                </div>
-                <div
-                    class="w-1.5 h-10  rounded-r-lg bg-green-strong-custom opacity-0 group-hover:opacity-100 absolute transition-opacity duration-300">
-                </div>
-                <!-- Icon -->
-                <img :src="icHome" class="pl-5 group-hover:hidden">
-                <img :src="icHomeSelected" class="pl-5 group-hover:block hidden">
+            <RouterLink to="/" v-slot="{ isActive }">
+                <div class="group flex items-center gap-3 py-2 relative cursor-pointer">
 
-                <span
-                    class="text-lg font-semibold text-black-custom font-inter group-hover:text-green-strong-custom">Beranda</span>
+                    <!-- Left highlight bar -->
+                    <div class="w-1.5 h-10 rounded-r-lg bg-grey-custom transition-all duration-300"
+                        :class="isActive ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'">
+                    </div>
 
-            </a>
+                    <div class="w-1.5 h-10 rounded-r-lg bg-green-strong-custom transition-all duration-300 absolute left-0"
+                        :class="isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'">
+                    </div>
+
+                    <!-- Icon -->
+                    <img :src="isActive ? icHomeSelected : icHome" class="pl-5">
+
+                    <!-- Text -->
+                    <span class="text-lg font-semibold font-inter transition-colors duration-300"
+                        :class="isActive ? 'text-green-strong-custom' : 'text-black-custom group-hover:text-green-strong-custom'">
+                        Beranda
+                    </span>
+
+                </div>
+            </RouterLink>
+
 
             <!-- Temuan -->
-            <a href="#" class="group flex items-center gap-3 py-2">
-                <div
-                    class="w-1.5 h-10 rounded-r-lg bg-grey-custom opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                </div>
-                <div
-                    class="w-1.5 h-10  rounded-r-lg bg-green-strong-custom opacity-0 group-hover:opacity-100 absolute transition-opacity duration-300">
-                </div>
-                <!-- Icon -->
-                <img :src="icList" class="pl-5 group-hover:hidden">
-                <img :src="icListSelected" class="pl-5 group-hover:block hidden">
+            <RouterLink to="/finding" v-slot="{ isActive }">
+                <div class="group flex items-center gap-3 py-2 relative cursor-pointer">
 
-                <span
-                    class="text-lg font-semibold text-black-custom font-inter group-hover:text-green-strong-custom">Temuan</span>
-            </a>
+                    <div class="w-1.5 h-10 rounded-r-lg bg-grey-custom transition-all duration-300"
+                        :class="isActive ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'">
+                    </div>
+
+                    <div class="w-1.5 h-10 rounded-r-lg bg-green-strong-custom transition-all duration-300 absolute left-0"
+                        :class="isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'">
+                    </div>
+
+                    <img :src="isActive ? icListSelected : icList" class="pl-5">
+
+                    <span class="text-lg font-semibold font-inter transition-colors duration-300"
+                        :class="isActive ? 'text-green-strong-custom' : 'text-black-custom group-hover:text-green-strong-custom'">
+                        Temuan
+                    </span>
+
+                </div>
+            </RouterLink>
+
 
             <!-- Personel -->
-            <a href="#" class="group flex items-center gap-3 py-2">
-                <div
-                    class="w-1.5 h-10 rounded-r-lg bg-grey-custom opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                </div>
-                <div
-                    class="w-1.5 h-10  rounded-r-lg bg-green-strong-custom opacity-0 group-hover:opacity-100 absolute transition-opacity duration-300">
-                </div>
-                <!-- Icon -->
-                <img :src="icPerson" class="pl-5 group-hover:hidden">
-                <img :src="icPersonSelected" class="pl-5 group-hover:block hidden">
+            <RouterLink to="/personel" v-slot="{ isActive }">
+                <div class="group flex items-center gap-3 py-2 relative cursor-pointer">
 
-                <span
-                    class="text-lg font-semibold text-black-custom font-inter group-hover:text-green-strong-custom">Personil</span>
-            </a>
+                    <div class="w-1.5 h-10 rounded-r-lg bg-grey-custom transition-all duration-300"
+                        :class="isActive ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'">
+                    </div>
+
+                    <div class="w-1.5 h-10 rounded-r-lg bg-green-strong-custom transition-all duration-300 absolute left-0"
+                        :class="isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'">
+                    </div>
+
+                    <img :src="isActive ? icPersonSelected : icPerson" class="pl-5">
+
+                    <span class="text-lg font-semibold font-inter transition-colors duration-300"
+                        :class="isActive ? 'text-green-strong-custom' : 'text-black-custom group-hover:text-green-strong-custom'">
+                        Personil
+                    </span>
+
+                </div>
+            </RouterLink>
+
 
         </nav>
 
