@@ -1,34 +1,31 @@
 <template>
     <div class="mt-6 ml-6 mr-6">
         <div class="space-y-4">
-            <div v-for="item in temuan" :key="item.id"
+            <div v-for="item in items" :key="item.id"
                 class="min-h-8 bg-white shadow rounded-2xl px-3 py-2 border flex flex-row justify-between">
                 <!-- Judul -->
                 <dev class="flex flex-col">
                     <h3 class="font-semibold text-gray-800 leading-tight line-clamp-2 min-h-10 hover:cursor-pointer">
-                        {{ item.judul }}
+                        {{ item.finding }}
                     </h3>
                     <!-- Informasi Baris -->
                     <div class="flex items-center text-sm text-gray-500 space-x-4 mt-3">
                         <span class="flex items-center">
                             <img :src="icCalendar" class="w-4 h-4 mr-1" />
-                            {{ item.tanggal }}
+                            {{ formatDisplayDate(item.date) }}
                         </span>
 
                         <span class="flex items-center">
                             <img :src="icPersonSelected" class="w-4 h-4 mr-1" />
 
-                            {{ item.nama }}
+                            {{ item.name }}
                         </span>
 
                         <span class="flex items-center">
-                            {{ item.divisi }}
+                            {{ item.division }} to {{ item.to_division }}
                         </span>
                     </div>
                 </dev>
-
-
-
 
                 <!-- Status badge -->
                 <div class="mt-2">
@@ -40,8 +37,8 @@
             </div>
         </div>
 
-        <div class="flex justify-end mt-6">
-            <button class="text-green-600 font-medium underline hover:cursor-pointer">
+        <div class="flex justify-end mt-6" v-if="showSeeAll">
+            <button class="text-green-600 font-medium underline hover:cursor-pointer" @click="$emit('seeAll')">
                 Lihat Semua
             </button>
         </div>
@@ -52,89 +49,29 @@
 <script setup>
 import icCalendar from '../assets/ic-calendar.png'
 import icPersonSelected from '../assets/ic-person-selected.png'
-const temuan = [
-    {
-        id: 1,
-        judul: "Kabel listrik belakang commshop belum terisolasi dengan baik terlihat inti dari kabel, kabel masih ada yang belum ditanam, khawatir terkena setrum mengingat kegiatan aktif didaerah itu",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Proses"
+
+const props = defineProps({
+    items: {
+        type: Array,
+        required: true
     },
-    {
-        id: 2,
-        judul: "Rumput panjang di depan main office menyangko nyangko dah, sampai mengengait orang lewat, bahyo ado ulo muwo, kato siapo tak meninggal",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Selesai"
-    },
-    {
-        id: 3,
-        judul: "Kabel listrik belakang commshop belum terisolasi...",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Draf"
-    },
-    {
-        id: 4,
-        judul: "Rumput panjang di depan main office",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Tunda"
-    },
-    {
-        id: 5,
-        judul: "Kabel listrik belakang commshop belum terisolasi...",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Proses"
-    },
-    {
-        id: 6,
-        judul: "Rumput panjang di depan main office",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Selesai"
-    },
-    {
-        id: 7,
-        judul: "Kabel listrik belakang commshop belum terisolasi...",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Proses"
-    },
-    {
-        id: 8,
-        judul: "Rumput panjang di depan main office",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Selesai"
-    },
-    {
-        id: 9,
-        judul: "Kabel listrik belakang commshop belum terisolasi...",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Proses"
-    },
-    {
-        id: 10,
-        judul: "Rumput panjang di depan main office",
-        tanggal: "Ahad, 02 Nov 2025",
-        nama: "Firdaus",
-        divisi: "ICT to Electric",
-        status: "Selesai"
+    showSeeAll: {
+        type: Boolean,
+        default: false
     }
-    // isi dengan data lainnya...
-]
+})
+
+const formatDisplayDate = (iso) => {
+    if (!iso) return '-'
+    const d = new Date(iso)
+
+    return d.toLocaleDateString('id-ID', {
+        weekday: 'long',   // Senin, Selasa, ...
+        day: '2-digit',    // 09
+        month: 'short',    // Des
+        year: 'numeric'    // 2025
+    })
+}
 
 const statusClass = (status) => {
     switch (status) {

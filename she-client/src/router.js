@@ -1,21 +1,24 @@
 import { createWebHistory, createRouter } from "vue-router";
 
 import Finding from "./views/Finding.vue";
-import Personel from "./views/Personel.vue";
+import PersonelView from "./views/PersonelView.vue";
 import Home from "./views/Home.vue";
 
 const routes = [
     {
         path: '/',
-        component: () => import('./views/Home.vue')
+        name: 'Home',
+        component: Home
     },
     {
         path: '/finding',
-        component: () => import('./views/Finding.vue')
+        name: 'Finding',
+        component: Finding
     },
     {
         path: '/personel',
-        component: () => import('./views/Personel.vue')
+        name: 'Personel',
+        component: PersonelView
     }
 ]
 
