@@ -48,7 +48,7 @@
         </div>
 
         <!-- List Personil -->
-        <PersonelList :items="filteredPersonil" />
+        <PersonelList :items="filteredPersonil" @select="handleSelectPersonel" />
     </div>
 </template>
 
@@ -81,9 +81,9 @@ const filteredPersonil = computed(() => {
     // urutkan berdasar skor
     result = result.sort((a, b) => {
         if (filters.value.sort === 'tertinggi') {
-            return b.skor - a.skor
+            return b.jumlahTemuan - a.jumlahTemuan
         } else {
-            return a.skor - b.skor
+            return a.jumlahTemuan - b.jumlahTemuan
         }
     })
 
@@ -96,5 +96,12 @@ const resetFilters = () => {
         search: '',
         sort: 'tertinggi'
     }
+}
+
+const handleSelectPersonel = (person) => {
+    // nanti di sini kita arahkan ke halaman detail personil
+    // contoh:
+    // router.push({ name: 'PersonelDetail', params: { id: person.id } })
+    console.log('Klik personil:', person.nama)
 }
 </script>

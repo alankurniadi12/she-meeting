@@ -1,6 +1,10 @@
 <template>
     <div class="mt-6 ml-6 mr-6">
         <div class="space-y-4">
+            <!-- Kalau kosong -->
+            <div v-if="!items || !items.length" class="text-sm text-gray-400 italic py-4 text-center">
+                Belum ada data Temuan.
+            </div>
             <div v-for="item in items" :key="item.id"
                 class="min-h-8 bg-white shadow rounded-2xl px-3 py-2 border flex flex-row justify-between">
                 <!-- Judul -->

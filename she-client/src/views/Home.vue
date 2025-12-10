@@ -59,7 +59,7 @@ const handleSeeAll = () => {
 
 const latestPersonil = computed(() => {
     return allPersonil.value
-        .sort((a, b) => b.skor - a.skor)
+        .sort((a, b) => b.jumlahTemuan - a.jumlahTemuan)
         .slice(0, 10);
 });
 
