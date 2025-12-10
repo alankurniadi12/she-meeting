@@ -25,7 +25,7 @@
                     Lihat Semua
                 </button>
             </div>
-            <PersonelList :items="latestPersonil" />
+            <PersonelList :items="latestPersonil" @select="handleSelectPersonel" />
         </div>
     </div>
 </template>
@@ -65,6 +65,13 @@ const latestPersonil = computed(() => {
 
 const handleSeeAllPersonil = () => {
     router.push({ name: 'Personel' })
+}
+
+const handleSelectPersonel = (person) => {
+    router.push({
+        name: 'PersonelDetail',
+        params: { id: person.id }
+    })
 }
 
 </script>

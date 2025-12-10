@@ -56,6 +56,9 @@
 import { ref, computed } from 'vue'
 import PersonelList from '@/components/PersonelList.vue'
 import { dummyPersonil } from '@/dataDummy.js'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const allPersonil = ref(dummyPersonil)
 
@@ -99,9 +102,9 @@ const resetFilters = () => {
 }
 
 const handleSelectPersonel = (person) => {
-    // nanti di sini kita arahkan ke halaman detail personil
-    // contoh:
-    // router.push({ name: 'PersonelDetail', params: { id: person.id } })
-    console.log('Klik personil:', person.nama)
+    router.push({
+        name: 'PersonelDetail',
+        params: { id: person.id }
+    })
 }
 </script>
