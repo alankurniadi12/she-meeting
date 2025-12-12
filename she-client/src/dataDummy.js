@@ -272,16 +272,6 @@ export const dummyTemuan = [
 
 ]
 
-// export const dummyPersonil = [
-//   { id: 1, nama: "Firman",      divisi: "ICT",           skor: 100 },
-//   { id: 2, nama: "Isharyanto",  divisi: "ICT",           skor: 97 },
-//   { id: 3, nama: "Firdaus",     divisi: "ICT to Electric", skor: 91 },
-//   { id: 4, nama: "Arif",        divisi: "Facility",      skor: 88 },
-//   { id: 5, nama: "Budi",        divisi: "Security",      skor: 80 },
-//   { id: 6, nama: "Joko",        divisi: "Produksi",      skor: 75 },
-//   // ...lanjutkan sesuai kebutuhan
-// ]
-
 export const dummyPersonil = [
   {
     id: 1,
