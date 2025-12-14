@@ -4,6 +4,7 @@ import Finding from "./views/Finding.vue";
 import PersonelView from "./views/PersonelView.vue";
 import Home from "./views/Home.vue";
 import PersoneDetaillView from "./views/PersonelDetailView.vue";
+import FindingDetail from "./views/FindingDetail.vue";
 
 const routes = [
     {
@@ -25,6 +26,12 @@ const routes = [
         path: '/personel/:id',
         name: 'PersonelDetail',
         component: PersoneDetaillView,
+        props: true
+    },
+    {
+        path: '/finding/:id',
+        name: 'FindingDetail',
+        component: FindingDetail,
         props: true
     }
 ]

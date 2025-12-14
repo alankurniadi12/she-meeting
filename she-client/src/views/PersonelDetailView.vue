@@ -121,7 +121,7 @@ const formatShortDate = (iso) => {
 }
 
 const goBack = () => {
-    router.push({ name: 'Personel' })
+    router.back()
 }
 </script>
 

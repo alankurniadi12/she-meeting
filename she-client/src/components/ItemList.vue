@@ -6,11 +6,12 @@
                 Belum ada data Temuan.
             </div>
             <div v-for="item in items" :key="item.id"
-                class="min-h-8 bg-white shadow rounded-2xl px-3 py-2 border flex flex-row justify-between">
+                class="min-h-8 bg-white shadow rounded-2xl px-3 py-2 border flex flex-row justify-between"
+                @click="goToDetail(item.id)">
                 <!-- Judul -->
                 <dev class="flex flex-col">
                     <h3 class="font-semibold text-gray-800 leading-tight line-clamp-2 min-h-10 hover:cursor-pointer">
-                        {{ item.finding }}
+                        {{ item.description }}
                     </h3>
                     <!-- Informasi Baris -->
                     <div class="flex items-center text-sm text-gray-500 space-x-4 mt-3">
@@ -51,6 +52,7 @@
 
 
 <script setup>
+import router from '@/router'
 import icCalendar from '../assets/ic-calendar.png'
 import icPersonSelected from '../assets/ic-person-selected.png'
 
@@ -90,6 +92,10 @@ const statusClass = (status) => {
         default:
             return ""
     }
+}
+
+const goToDetail = (id) => {
+    router.push({ name: 'FindingDetail', params: { id } })  
 }
 </script>
 

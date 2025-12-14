@@ -125,7 +125,7 @@ const filteredTemuan = computed(() => {
         const keyword = filters.value.search.toLowerCase()
         const matchSearch =
             !keyword ||
-            t.finding.toLowerCase().includes(keyword) ||
+            t.description.toLowerCase().includes(keyword) ||
             t.name.toLowerCase().includes(keyword)
 
         const matchDate =
@@ -148,22 +148,6 @@ const filteredTemuan = computed(() => {
 
     return result
 })
-
-
-const statusClass = (status) => {
-    switch (status) {
-        case 'Selesai':
-            return 'bg-green-100 text-green-700 border border-green-300'
-        case 'Proses':
-            return 'bg-yellow-100 text-yellow-700 border border-yellow-300'
-        case 'Tunda':
-            return 'bg-red-100 text-red-700 border border-red-300'
-        case 'Draft':
-            return 'bg-gray-200 text-gray-700 border border-gray-300'
-        default:
-            return ''
-    }
-}
 
 const resetFilters = () => {
     filters.value = {
