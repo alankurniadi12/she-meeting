@@ -405,7 +405,7 @@ export const dummyPersonil = [
     statusPekerja: "Kontrak",
 
     tahunBergabung: 2018,
-    usiaPensiun: 53,
+    usiaPensiun: 56,
 
     jumlahTemuan: 13,
     tanggalTemuanTerbaru: "2025-12-10",
@@ -414,6 +414,15 @@ export const dummyPersonil = [
       { id: 101, judul: "Kabel listrik belakang commshop belum terisolasi...", date: "2025-12-10", status: "Proses" },
       { id: 95, judul: "APAR area produksi kadaluarsa", date: "2025-12-02", status: "Selesai" },
       { id: 88, judul: "Penerangan jalur safety redup", date: "2025-11-23", status: "Tunda" },
+      { id: 101, judul: "Kabel listrik belakang commshop belum terisolasi...", date: "2025-12-10", status: "Proses" },
+      { id: 95, judul: "APAR area produksi kadaluarsa", date: "2025-12-02", status: "Selesai" },
+      { id: 88, judul: "Penerangan jalur safety redup", date: "2025-11-23", status: "Tunda" },
+      { id: 101, judul: "Kabel listrik belakang commshop belum terisolasi...", date: "2025-12-10", status: "Proses" },
+      { id: 95, judul: "APAR area produksi kadaluarsa", date: "2025-12-02", status: "Selesai" },
+      { id: 88, judul: "Penerangan jalur safety redup", date: "2025-11-23", status: "Tunda" },
+      { id: 101, judul: "Kabel listrik belakang commshop belum terisolasi...", date: "2025-12-10", status: "Proses" },
+      { id: 95, judul: "APAR area produksi kadaluarsa", date: "2025-12-02", status: "Selesai" },
+      { id: 88, judul: "Penerangan jalur safety redup", date: "2025-11-23", status: "Tunda" }
     ]
   },
 
@@ -434,7 +443,7 @@ export const dummyPersonil = [
     statusPekerja: "Kontrak",
 
     tahunBergabung: 2025,
-    usiaPensiun: 53,
+    usiaPensiun: 56,
 
     jumlahTemuan: 9,
     tanggalTemuanTerbaru: "2025-12-08",
@@ -462,7 +471,7 @@ export const dummyPersonil = [
     statusPekerja: "Kontrak",
 
     tahunBergabung: 2014,
-    usiaPensiun: 53,
+    usiaPensiun: 56,
 
     jumlahTemuan: 11,
     tanggalTemuanTerbaru: "2025-11-02",
@@ -490,7 +499,7 @@ export const dummyPersonil = [
     statusPekerja: "Tetap",
 
     tahunBergabung: 2019,
-    usiaPensiun: 53,
+    usiaPensiun: 56,
 
     jumlahTemuan: 7,
     tanggalTemuanTerbaru: "2025-10-20",
@@ -518,7 +527,7 @@ export const dummyPersonil = [
     statusPekerja: "Paruh Waktu",
 
     tahunBergabung: 2013,
-    usiaPensiun: 53,
+    usiaPensiun: 56,
 
     jumlahTemuan: 4,
     tanggalTemuanTerbaru: "2025-11-12",

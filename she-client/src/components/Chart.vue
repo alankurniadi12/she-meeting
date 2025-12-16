@@ -3,7 +3,8 @@
         <div class="overflow-x-auto">
             <div class="flex space-x-8 w-max">
                 <!-- Total -->
-                <div class="w-55 h-35 bg-green-custom rounded-3xl overflow-hidden hover:cursor-pointer">
+                <div class="w-55 h-35 bg-green-custom rounded-3xl overflow-hidden hover:cursor-pointer"
+                    @click="handleSeeAll">
                     <div class="p-4 w-full">
                         <div class="flex items-center justify-between ">
                             <h1 class="text-white font-semibold text-lg flex-1 break-words">Total</h1>
@@ -17,7 +18,8 @@
                 </div>
 
                 <!-- Selesai  -->
-                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden hover:cursor-pointer">
+                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden hover:cursor-pointer"
+                    @click="goToFinding('Selesai')">
                     <div class="p-4 w-full">
                         <div class="flex items-center justify-between ">
                             <h1 class="text-green-strong-custom font-semibold text-lg flex-1 break-words">Selesai</h1>
@@ -31,8 +33,9 @@
                 </div>
 
                 <!-- Proses  -->
-                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden hover:cursor-pointer">
-                    <div class="p-4 w-full">
+                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden hover:cursor-pointer"
+                    @click="goToFinding('Proses')">
+                    <div class=" p-4 w-full">
                         <div class="flex items-center justify-between ">
                             <h1 class="text-orange-custom font-semibold text-lg flex-1 break-words">Proses</h1>
                             <img class="w-8 h-8 shrink-0" :src="icArrowGrey" alt="icon arrow white">
@@ -45,8 +48,9 @@
                 </div>
 
                 <!-- Tunda  -->
-                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden hover:cursor-pointer">
-                    <div class="p-4 w-full">
+                <div class="w-55 h-35 bg-grey-custom rounded-3xl overflow-hidden hover:cursor-pointer"
+                    @click="goToFinding('Tunda')">
+                    <div class=" p-4 w-full">
                         <div class="flex items-center justify-between ">
                             <h1 class="text-red-custom font-semibold text-lg flex-1 break-words">Tunda</h1>
                             <img class="w-8 h-8 shrink-0" :src="icArrowGrey" alt="icon arrow white">
@@ -69,4 +73,19 @@ import icArrowGrey from '../assets/ic-arrow-grey.png'
 import icDone from '../assets/ic-done.png'
 import icTimer from '../assets/ic-timer.png'
 import icPause from '../assets/ic-pause.png'
+import { useRouter } from 'vue-router'
+
+const router = useRouter();
+
+const handleSeeAll = () => {
+    // Logic for "Lihat Semua" button
+    router.push({ name: 'Finding' })
+};
+
+const goToFinding = (status) => {
+    router.push({
+        name: 'Finding',
+        query: { status }
+    });
+};
 </script>

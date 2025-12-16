@@ -14,8 +14,12 @@
                 <!-- Status -->
                 <div class="flex flex-col">
                     <label class="text-sm text-gray-600 mb-1">Status</label>
-                    <select v-model="filters.status"
-                        class="border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring focus:ring-green-200">
+                    <select v-model="filters.status" :class="[
+                        'border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none transition-all',
+                        isFromDashboard
+                            ? 'ring-2 ring-green-400 animate-pulse-filter'
+                            : 'focus:ring focus:ring-green-200'
+                    ]">
                         <option value="Semua">Semua</option>
                         <option value="Proses">Proses</option>
                         <option value="Selesai">Selesai</option>
@@ -100,6 +104,33 @@
 import { ref, computed } from 'vue'
 import ItemList from '../components/ItemList.vue';
 import { dummyTemuan } from '../dataDummy.js';
+import { useRoute } from 'vue-router';
+import { watch, onMounted } from 'vue';
+
+const route = useRoute();
+const isFromDashboard = ref(false);
+
+const applyStatusFromQuery = () => {
+    if (route.query.status) {
+        filters.value.status = route.query.status;
+        isFromDashboard.value = true;
+
+        setTimeout(() => {
+            isFromDashboard.value = false;
+        }, 5000);
+    }
+};
+
+onMounted(applyStatusFromQuery);
+
+
+
+watch(
+    () => route.query.status,
+    () => {
+        applyStatusFromQuery
+    }
+);
 
 const allTemuan = ref(dummyTemuan)
 
@@ -187,3 +218,22 @@ const formatDate = (iso) => {
 }
 
 </script>
+<style scoped>
+@keyframes pulse-filter {
+    0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+.animate-pulse-filter {
+    animation: pulse-filter 1s ease-out infinite;
+}
+</style>

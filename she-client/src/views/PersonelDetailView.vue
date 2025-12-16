@@ -8,6 +8,14 @@ const router = useRouter()
 
 const id = Number(route.params.id)
 
+const showSensitiveInfo = ref({
+    birthDate: false,
+    age: false,
+    phoneNumber: false
+});
+
+const maskedText = (length = 6) => '*'.repeat(length);
+
 const person = computed(() =>
     dummyPersonil.find((p) => p.id === id)
 )
@@ -192,7 +200,7 @@ const goBack = () => {
                                 </div>
                                 <div>
                                     <p class="text-[10px] uppercase tracking-wide opacity-80">
-                                        Mengabdi
+                                        PENGABDIAN
                                     </p>
                                     <p class="font-semibold text-[12px]">
                                         {{ hitungMasaKerja(person.tahunBergabung) }}
@@ -208,10 +216,14 @@ const goBack = () => {
                                 </div>
                                 <div>
                                     <p class="text-[10px] uppercase tracking-wide opacity-80">
-                                        Total temuan
+                                        PENSIUN PADA
                                     </p>
                                     <p class="font-semibold text-[12px]">
-                                        {{ totalTemuan }}
+                                        {{
+                                            formatFullDate(
+                                                getTanggalPensiun(person.tanggalLahir, person.usiaPensiun)?.toISOString()
+                                            )
+                                        }}
                                     </p>
                                 </div>
                             </div>
@@ -249,20 +261,44 @@ const goBack = () => {
                                 <p class="text-[11px] uppercase tracking-wide text-slate-400">
                                     Tempat & tanggal lahir
                                 </p>
-                                <p class="text-[13px] font-medium text-slate-800">
-                                    {{ person.tempatLahir }}, {{ formatFullDate(person.tanggalLahir) }}
-                                </p>
-                            </div>
-                            <div class="flex justify-between gap-3">
-                                <div>
-                                    <p class="text-[11px] uppercase tracking-wide text-slate-400">
-                                        Umur
+                                <div class="flex items-center justify-between gap-2">
+                                    <p class="text-[13px] font-medium text-slate-800">
+                                        <span v-if="showSensitiveInfo.birthDate">
+                                            {{ person.tempatLahir }}, {{ formatFullDate(person.tanggalLahir) }}
+                                        </span>
+                                        <span v-else class="text-slate-400">
+                                            {{ maskedText(10) }}
+                                        </span>
                                     </p>
-                                    <p class="text-[13px] font-medium">
-                                        {{ hitungUmur(person.tanggalLahir) }}
-                                    </p>
+
+                                    <button @click="showSensitiveInfo.birthDate = !showSensitiveInfo.birthDate"
+                                        class="text-slate-400 hover:text-slate-600 transition">
+                                        {{ showSensitiveInfo.birthDate ? '🙈' : '👁️' }}
+                                    </button>
                                 </div>
                             </div>
+
+                            <div>
+                                <p class="text-[11px] uppercase tracking-wide text-slate-400">
+                                    Umur
+                                </p>
+                                <div class="flex items-center justify-between gap-2">
+                                    <p class="text-[13px] font-medium  text-slate-800">
+                                        <span v-if="showSensitiveInfo.age">
+                                            {{ hitungUmur(person.tanggalLahir) }} tahun
+                                        </span>
+                                        <span v-else class="text-slate-400">
+                                            {{ maskedText(10) }}
+                                        </span>
+                                    </p>
+
+                                    <button @click="showSensitiveInfo.age = !showSensitiveInfo.age"
+                                        class="text-slate-400 hover:text-slate-600 transition">
+                                        {{ showSensitiveInfo.age ? '🙈' : '👁️' }}
+                                    </button>
+                                </div>
+                            </div>
+
                             <div>
                                 <p class="text-[11px] uppercase tracking-wide text-slate-400">
                                     Domisili
@@ -275,9 +311,21 @@ const goBack = () => {
                                 <p class="text-[11px] uppercase tracking-wide text-slate-400">
                                     No HP
                                 </p>
-                                <p class="text-[13px]">
-                                    {{ person.telepon }}
-                                </p>
+                                <div class="flex items-center justify-between">
+                                    <p class="text-[13px]">
+                                        <span v-if="showSensitiveInfo.phoneNumber">
+                                            {{ person.telepon }}
+                                        </span>
+                                        <span v-else class="text-slate-400">
+                                            {{ maskedText(10) }}
+                                        </span>
+                                    </p>
+
+                                    <button @click="showSensitiveInfo.phoneNumber = !showSensitiveInfo.phoneNumber"
+                                        class="text-slate-400 hover:text-slate-600">
+                                        {{ showSensitiveInfo.phoneNumber ? '🙈' : '👁️' }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </article>
@@ -344,6 +392,15 @@ const goBack = () => {
 
                             <div>
                                 <p class="text-[11px] uppercase tracking-wide text-slate-400">
+                                    Sisa masa kerja
+                                </p>
+                                <p class="text-[13px] font-medium text-emerald-700">
+                                    {{ hitungSisaMasaKerja(person.tanggalLahir, person.usiaPensiun) }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-[11px] uppercase tracking-wide text-slate-400">
                                     Pensiun pada
                                 </p>
                                 <p class="text-[13px] font-medium">
@@ -355,17 +412,10 @@ const goBack = () => {
                                 </p>
                             </div>
 
-                            <div>
-                                <p class="text-[11px] uppercase tracking-wide text-slate-400">
-                                    Sisa masa kerja
-                                </p>
-                                <p class="text-[13px] font-medium text-emerald-700">
-                                    {{ hitungSisaMasaKerja(person.tanggalLahir, person.usiaPensiun) }}
-                                </p>
-                            </div>
+
 
                             <p class="text-[11px] text-slate-500 mt-1">
-                                53 Tahun adalah masa pensiun yang ditetapkan oleh perusahaan.
+                                {{ person.usiaPensiun }} Tahun adalah masa pensiun yang ditetapkan oleh perusahaan.
                             </p>
                         </div>
                     </article>
@@ -435,9 +485,7 @@ const goBack = () => {
                             <h3 class="text-sm font-semibold text-slate-700">
                                 Riwayat Temuan
                             </h3>
-                            <p class="text-[11px] text-slate-400">
-                                Menampilkan maksimal 10 temuan per halaman
-                            </p>
+
                         </div>
                         <p class="text-xs text-slate-500">
                             Total: {{ totalTemuan }} temuan

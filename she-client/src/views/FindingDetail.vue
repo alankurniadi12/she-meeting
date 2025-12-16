@@ -9,7 +9,7 @@
           </button>
           <div>
             <h1 class="text-2xl font-semibold text-gray-800">
-              Detail temuan SHE
+              Detail Temuan
             </h1>
           </div>
         </div>
