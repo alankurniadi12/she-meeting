@@ -37,6 +37,8 @@
                         <option value="ICT">ICT</option>
                         <option value="Electric">Electric</option>
                         <option value="Facility">Facility</option>
+                        <option value="Camp">Camp</option>
+                        <option value="PR">PR</option>
                     </select>
                 </div>
 
@@ -96,7 +98,29 @@
 
         </div>
         <!-- List temuan -->
-        <ItemList :items="filteredTemuan" :showSeeAll="false" />
+        <ItemList :items="paginatedTemuan" :showSeeAll="false" />
+
+        <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-6">
+            <!-- Prev -->
+            <button class="px-3 py-1 text-sm border rounded-lg" :disabled="currentPage === 1" @click="currentPage--">
+                ←
+            </button>
+
+            <!-- Page number -->
+            <button v-for="page in totalPages" :key="page" @click="currentPage = page"
+                class="px-3 py-1 text-sm border rounded-lg" :class="page === currentPage
+                    ? 'bg-green-600 text-white border-green-600'
+                    : 'hover:bg-gray-100'">
+                {{ page }}
+            </button>
+
+            <!-- Next -->
+            <button class="px-3 py-1 text-sm border rounded-lg" :disabled="currentPage === totalPages"
+                @click="currentPage++">
+                →
+            </button>
+        </div>
+
     </div>
 </template>
 
@@ -109,31 +133,10 @@ import { watch, onMounted } from 'vue';
 
 const route = useRoute();
 const isFromDashboard = ref(false);
-
-const applyStatusFromQuery = () => {
-    if (route.query.status) {
-        filters.value.status = route.query.status;
-        isFromDashboard.value = true;
-
-        setTimeout(() => {
-            isFromDashboard.value = false;
-        }, 5000);
-    }
-};
-
-onMounted(applyStatusFromQuery);
-
-
-
-watch(
-    () => route.query.status,
-    () => {
-        applyStatusFromQuery
-    }
-);
-
-const allTemuan = ref(dummyTemuan)
-
+const allTemuan = ref(dummyTemuan);
+const currentPage = ref(1);
+const perPage = 10;
+const newDate = ref('')
 const filters = ref({
     status: 'Semua',
     division: 'Semua',
@@ -142,8 +145,6 @@ const filters = ref({
     selectedDates: []
 })
 
-const newDate = ref('')
-
 const filteredTemuan = computed(() => {
     // 1. FILTER
     let result = allTemuan.value.filter((t) => {
@@ -151,7 +152,7 @@ const filteredTemuan = computed(() => {
             filters.value.status === 'Semua' || t.status === filters.value.status
 
         const matchDivision =
-            filters.value.division === 'Semua' || t.to_division === filters.value.division
+            filters.value.division === 'Semua' || t.division === filters.value.division
 
         const keyword = filters.value.search.toLowerCase()
         const matchSearch =
@@ -179,6 +180,44 @@ const filteredTemuan = computed(() => {
 
     return result
 })
+
+const totalPages = computed(() => {
+    return Math.ceil(filteredTemuan.value.length / perPage);
+});
+
+const paginatedTemuan = computed(() => {
+    const start = (currentPage.value - 1) * perPage;
+    const end = start + perPage;
+    return filteredTemuan.value.slice(start, end);
+});
+
+const applyStatusFromQuery = () => {
+    if (route.query.status) {
+        filters.value.status = route.query.status;
+        isFromDashboard.value = true;
+
+        setTimeout(() => {
+            isFromDashboard.value = false;
+        }, 5000);
+    }
+};
+
+onMounted(applyStatusFromQuery);
+
+watch(currentPage, () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+watch(filteredTemuan, () => {
+    currentPage.value = 1;
+})
+
+watch(
+    () => route.query.status,
+    () => {
+        applyStatusFromQuery();
+    }
+);
 
 const resetFilters = () => {
     filters.value = {
