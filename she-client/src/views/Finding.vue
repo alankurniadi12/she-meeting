@@ -3,10 +3,13 @@
         <!-- Judul + tombol -->
         <div class="flex items-center justify-between mt-4 mb-4">
             <h1 class="text-2xl font-semibold text-gray-800">Daftar Temuan</h1>
-            <button class="px-4 py-2 bg-green-600 text-white rounded-xl shadow hover:bg-green-700">
+            <button class="px-4 py-2 bg-green-600 text-white rounded-xl shadow hover:bg-green-700"
+                @click="isAddModalOpen = true">
                 + Tambah Temuan
             </button>
         </div>
+
+        <addFindingModal :open="isAddModalOpen" @close="isAddModalOpen = false" @submintted="handleAddFinding" />
 
         <!-- Filter bar -->
         <div class="bg-white rounded-2xl shadow p-4 mb-4 flex flex-col">
@@ -130,6 +133,7 @@ import ItemList from '../components/ItemList.vue';
 import { dummyTemuan } from '../dataDummy.js';
 import { useRoute } from 'vue-router';
 import { watch, onMounted } from 'vue';
+import AddFindingModal from './AddFindingModal.vue';
 
 const route = useRoute();
 const isFromDashboard = ref(false);
@@ -137,6 +141,7 @@ const allTemuan = ref(dummyTemuan);
 const currentPage = ref(1);
 const perPage = 10;
 const newDate = ref('')
+const isAddModalOpen = ref(false)
 const filters = ref({
     status: 'Semua',
     division: 'Semua',
@@ -180,6 +185,11 @@ const filteredTemuan = computed(() => {
 
     return result
 })
+
+const handleAddFinding = (newFinding) => {
+    allTemuan.value.unshift(newFinding)
+    isAddModalOpen.value = false
+}
 
 const totalPages = computed(() => {
     return Math.ceil(filteredTemuan.value.length / perPage);
