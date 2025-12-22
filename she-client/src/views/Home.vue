@@ -1,4 +1,8 @@
 <template>
+    <div v-if="toast.show" class="fixed top-6 right-6 z-50 px-4 py-3 rounded-xl shadow-lg text-sm transition-all"
+        :class="toast.type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'">
+        {{ toast.message }}
+    </div>
     <div class="mt-2">
         <Chart />
     </div>
@@ -10,11 +14,13 @@
                     <button class="text-green-600 font-medium underline hover:cursor-pointer" @click="handleSeeAll">
                         Lihat Semua
                     </button>
-                    <button class="px-4 py-2 bg-green-600 text-white rounded-xl shadow hover:cursor-pointer">
+                    <button class="px-4 py-2 bg-green-600 text-white rounded-xl shadow hover:cursor-pointer"
+                        @click="isAddModalOpen = true">
                         + Tambah Temuan
                     </button>
                 </div>
             </div>
+            <addFindingModal :open="isAddModalOpen" @close="isAddModalOpen = false" @submintted="handleAddFinding" />
 
             <ItemList :items="latestTemuan" :showSeeAll="true" @seeAll="handleSeeAll" />
         </div>
@@ -37,12 +43,14 @@ import { useRouter, useRoute } from 'vue-router'
 import Chart from '../components/Chart.vue';
 import ItemList from '../components/ItemList.vue';
 import PersonelList from '../components/PersonelList.vue';
+import AddFindingModal from './AddFindingModal.vue';
 
 import { dummyTemuan } from '@/dataDummy';
 import { dummyPersonil } from '@/dataDummy';
 
 const router = useRouter();
 const route = useRoute();
+const isAddModalOpen = ref(false)
 
 const allTemuan = ref(dummyTemuan);
 const allPersonil = ref(dummyPersonil);
@@ -52,6 +60,12 @@ const latestTemuan = computed(() => {
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 10);
 });
+
+const handleAddFinding = (newFinding) => {
+    allTemuan.value.unshift(newFinding)
+    isAddModalOpen.value = false
+    showToast('Temuan berhasil ditambahkan')
+}
 
 const handleSeeAll = () => {
     router.push({ name: 'Finding' })
@@ -72,6 +86,24 @@ const handleSelectPersonel = (person) => {
         name: 'PersonelDetail',
         params: { id: person.id }
     })
+}
+
+const toast = ref({
+    show: false,
+    message: '',
+    type: 'success'
+})
+
+const showToast = (message, type = 'success') => {
+    toast.value = {
+        show: true,
+        message,
+        type
+    }
+
+    setTimeout(() => {
+        toast.value.show = false
+    }, 3000)
 }
 
 </script>

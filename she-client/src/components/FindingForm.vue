@@ -1,12 +1,4 @@
 <template>
-    <!-- Toast -->
-    <div v-if="toast.show" class="fixed top-6 right-6 z-50 px-4 py-3 rounded-xl shadow-lg text-sm transition-all"
-        :class="toast.type === 'success'
-            ? 'bg-green-600 text-white'
-            : 'bg-red-600 text-white'">
-        {{ toast.message }}
-    </div>
-
     <div class="mb-4">
         <h2 class="text-lg font-semibold text-slate-800">
             Tambah Temuan SHE
@@ -24,6 +16,10 @@
             placeholder="Contoh: Kabel listrik belakang commshop belum terisolasi dengan baik dan berpotensi korsleting saat hujan."
             class="w-full border rounded-lg p-3 mt-1"
             :class="touched.description && errors.description ? 'border-red-400' : ''" />
+        <p v-if="touched.description && errors.description" class="text-xs text-red-500 mt-1">
+            {{ errors.description }}
+        </p>
+
     </div>
 
     <div>
@@ -56,10 +52,14 @@
         <label class="text-sm font-medium text-slate-700">
             Nama Pelapor
         </label>
-        <input v-model="form.reporterName" placeholder="Pilih / ketik nama pekerja"
-            class="w-full border rounded-lg p-3 mt-1" />
+        <input v-model="form.reporterName" @blur="touched.reporterName = true" placeholder="Pilih / ketik nama pekerja"
+            class="w-full border rounded-lg p-3 mt-1"
+            :class="touched.reporterName && errors.reporterName ? 'border-red-400' : ''" />
         <p class="text-xs text-slate-400 mt-1">
             Jika bukan pekerja, pilih opsi “Bukan pekerja”
+        </p>
+        <p v-if="touched.reporterName && errors.reporterName" class="text-xs text-red-500 mt-1">
+            {{ errors.reporterName }}
         </p>
     </div>
 
@@ -67,21 +67,29 @@
         <label class="text-sm font-medium text-slate-700">
             Nama Pelapor (Non-Pekerja)
         </label>
-        <input v-model="form.reporterName" placeholder="Contoh: Tamu vendor / Mahasiswa magang"
-            class="w-full border rounded-lg p-3 mt-1" />
+        <input v-model="form.reporterName" placeholder="Nama Pelapor - Magang" class="w-full border rounded-lg p-3 mt-1"
+            :class="touched.reporterName && errors.reporterName ? 'border-red-400' : ''" />
+        <p v-if="touched.reporterName && errors.reporterName" class="text-xs text-red-500 mt-1">
+            {{ errors.reporterName }}
+        </p>
     </div>
 
     <div>
         <label class="text-sm font-medium text-slate-700">
             Divisi Tujuan
         </label>
-        <select v-model="form.to_division" class="w-full border rounded-lg p-3 mt-1">
+        <select v-model="form.to_division" @blur="touched.to_division = true" class="w-full border rounded-lg p-3 mt-1"
+            :class="touched.to_division && errors.to_division ? 'border-red-400' : ''">
             <option value="">Pilih divisi</option>
             <option>ICT</option>
             <option>Electric</option>
             <option>Facility</option>
             <option>Camp</option>
         </select>
+
+        <p v-if="touched.to_division && errors.to_division" class="text-xs text-red-500 mt-1">
+            {{ errors.to_division }}
+        </p>
     </div>
 
     <div>
@@ -102,7 +110,7 @@
         </button>
 
         <button class="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center gap-2 disabled:opacity-50"
-            :disabled="isSubmitting || !form.description || !form.to_division" @click="submit">
+            :disabled="isSubmitting || !form.description" @click="submit">
             <span v-if="isSubmitting">Menyimpan...</span>
             <span v-else>Simpan Temuan</span>
         </button>
@@ -116,7 +124,11 @@ import { ref } from 'vue'
 const isSubmitting = ref(false)
 const isSuccess = ref(false)
 const errors = ref({})
-const touched = ref({})
+const touched = ref({
+    description: false,
+    reporterName: false,
+    to_division: false
+})
 
 
 
@@ -138,6 +150,14 @@ const validate = () => {
 
     if (form.value.description.length < 10) {
         e.description = 'Deskripsi terlalu singkat'
+    }
+
+    if (!form.value.to_division) {
+        e.to_division = 'Divisi tujuan wajib dipilih'
+    }
+
+    if (!form.value.reporterName) {
+        e.reporterName = 'Nama pelapor wajib diisi'
     }
 
     errors.value = e
@@ -203,30 +223,5 @@ const submit = async () => {
         isSuccess.value = false
     }, 1200)
 }
-
-const handleSubmitted = (newFinding) => {
-    allTemuan.value.unshift(newFinding)
-    showToast('Temuan berhasil ditambahkan')
-}
-
-
-const toast = ref({
-    show: false,
-    message: '',
-    type: 'success' // success | error
-})
-
-const showToast = (message, type = 'success') => {
-    toast.value = {
-        show: true,
-        message,
-        type
-    }
-
-    setTimeout(() => {
-        toast.value.show = false
-    }, 3000)
-}
-
 
 </script>

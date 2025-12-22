@@ -1,4 +1,8 @@
 <template>
+    <div v-if="toast.show" class="fixed top-6 right-6 z-50 px-4 py-3 rounded-xl shadow-lg text-sm transition-all"
+        :class="toast.type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'">
+        {{ toast.message }}
+    </div>
     <div class="w-full pl-4 pr-4 pb-6">
         <!-- Judul + tombol -->
         <div class="flex items-center justify-between mt-4 mb-4">
@@ -189,6 +193,7 @@ const filteredTemuan = computed(() => {
 const handleAddFinding = (newFinding) => {
     allTemuan.value.unshift(newFinding)
     isAddModalOpen.value = false
+    showToast('Temuan berhasil ditambahkan')
 }
 
 const totalPages = computed(() => {
@@ -265,6 +270,26 @@ const formatDate = (iso) => {
         year: 'numeric'
     })
 }
+
+const toast = ref({
+    show: false,
+    message: '',
+    type: 'success'
+})
+
+const showToast = (message, type = 'success') => {
+    toast.value = {
+        show: true,
+        message,
+        type
+    }
+
+    setTimeout(() => {
+        toast.value.show = false
+    }, 3000)
+}
+
+
 
 </script>
 <style scoped>
