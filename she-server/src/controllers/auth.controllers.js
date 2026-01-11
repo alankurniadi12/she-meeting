@@ -1,8 +1,9 @@
 import { User } from "../models/user.model.js";
-import generateToken  from "../utils/generate.token.js";
+import generateToken from "../utils/generate.token.js";
 
 export const login = async (req, res) => {
   try {
+    // read body from postman/request user
     const { email, password } = req.body;
 
     // 1. basic validation

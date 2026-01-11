@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// hasil hash password ini bisa di lihat pada mongodb 
 userSchema.pre("save", async function () {
 
   if (!this.isModified("password")) return;
@@ -47,11 +48,14 @@ userSchema.pre("save", async function () {
 
 });
 
+// mengembalikan nilai boolean, fungsi ini dipanggil pada testUserSchema.js 
+// bukti keberhasilanya di testUserSchema.js true/false
 userSchema.methods.comparePassword = async function (candidatePassword) {
 
   return await bcrypt.compare(candidatePassword, this.password);
-  
+
 };
+
 
 
 
