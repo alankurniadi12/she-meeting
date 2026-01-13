@@ -6,7 +6,10 @@ const app = express();
 
 app.use(express.json());
 app.use("/auth", authRoutes);
-app.use(findingRoutes)
+app.use(findingRoutes);
+app.use("/findings", findingRoutes);
 
 
 export default app;
+
+    // belum test

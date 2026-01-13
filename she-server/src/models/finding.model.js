@@ -73,4 +73,6 @@ findingSchema.index({ reportedAt: -1 });
 findingSchema.index({ status: 1 });
 findingSchema.index({ division: 1 });
 
-export const Finding = mongoose.model("Finding", findingSchema);
+const Finding = mongoose.model("Finding", findingSchema);
+
+export default Finding;
