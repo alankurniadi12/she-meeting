@@ -1,14 +1,8 @@
 import express from 'express';
-import { createFinding } from '../controllers/finding.controller';
-import protect from '../middlewares/auth.middleware';
+import { createFinding } from '../controllers/finding.controller.js';
+import protect from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
-
-
-// Sample route
-router.get('/', (req, res) => {
-  res.send('Hello World!');
-});
 
 router.post("/", protect, createFinding);
 

@@ -1,17 +1,23 @@
-import { User } from "../models/user.model.js";
+import User  from "../models/user.model.js";
 import generateToken from "../utils/generate.token.js";
+import { login } from "../services/auth.service.js";
 
 export const login = async (req, res) => {
   try {
     // read body from postman/request user
     const { email, password } = req.body;
-
-    // 1. basic validation
+        // 1. basic validation
     if (!email || !password) {
       return res.status(400).json({
         message: "Email dan password wajib diisi",
       });
     }
+
+    const result = await login(email, password);
+
+    return res.status(201).json(result.data);
+
+
 
     // 2. cari user + include password
     const user = await User.findOne({ email }).select("+password");

@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
-import { User } from "../models/user.model.js";
+import User from "../models/user.model.js";
 import dotevn from "dotenv";
 
 dotevn.config();
 
 async function testUserSchema() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/she_meeting');
+    await mongoose.connect(process.env.MONGODB_URI);
 
     // Create a new user
     const user = await User.create(
         {
-            name: "kurniadi",
-            email: `kurniadi${Date.now()}@gmail.com`,
-            password: "kurniadi",
+            name: "alan4",
+            email: `alan4@gmail.com`,
+            password: "alan4",
             division: "Test Division",
             role: "admin"
         },
@@ -20,7 +20,7 @@ async function testUserSchema() {
 
     console.log("User created:", user);
 
-    const isMatch = await user.comparePassword("password12");
+    const isMatch = await user.comparePassword("alan2");
     console.log("Password match:", isMatch);
 
     await mongoose.disconnect();
