@@ -21,10 +21,9 @@ const userSchema = new mongoose.Schema(
       minlegth: 6,
       select: false,
     },
-    role: {
+    position: {
       type: String,
-      enum: ["admin", "user"],
-      default: "user",
+      trim: true,
     },
     division: {
       type: String,
@@ -35,6 +34,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+    }
   },
   { timestamps: true }
 );

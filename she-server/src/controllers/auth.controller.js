@@ -1,59 +1,17 @@
-import User  from "../models/user.model.js";
-import generateToken from "../utils/generate.token.js";
-import { login } from "../services/auth.service.js";
+import { loginService } from "../services/auth.service.js";
 
-export const login = async (req, res) => {
+//route handler hanya boleh ada 3 parlameter: req, res, next
+// jika ada 4 parameter (err, req, res, next), maka itu adalah error handling middleware
+const loginController = async (req, res, next) => {
   try {
-    // read body from postman/request user
-    const { email, password } = req.body;
-        // 1. basic validation
-    if (!email || !password) {
-      return res.status(400).json({
-        message: "Email dan password wajib diisi",
-      });
-    }
-
-    const result = await login(email, password);
-
-    return res.status(201).json(result.data);
-
-
-
-    // 2. cari user + include password
-    const user = await User.findOne({ email }).select("+password");
-
-    if (!user || !user.isActive) {
-      return res.status(401).json({
-        message: "Email atau password salah",
-      });
-    }
-
-    // 3. compare password
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(401).json({
-        message: "Email atau password salah",
-      });
-    }
-
-    // 4. generate token
-    const token = generateToken(user._id);
-
-    // 5. response (password otomatis tidak ikut)
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        division: user.division,
-      },
-    });
+    const result = await loginService(req.body);
+    return res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({
-      message: "Login gagal",
-      error: error.message,
-    });
+    //error yang masuk kedalam next() 
+    //akan di tangani oleh error middleware (middlewares/error.middleware.js)
+    console.error("Error in loginController:", error);
+    next(error);
   }
 };
+
+export { loginController };
