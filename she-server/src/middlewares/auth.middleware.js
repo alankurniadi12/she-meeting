@@ -10,7 +10,7 @@ async function protect(req, res, next) {
     }
 
     if (!token) {
-        return res.status(401).json({ message: 'Not authorized, no token' });
+        return res.status(401).json({ code: 401, message: 'Not authorized, no token' });
     }
 
     try {
@@ -21,13 +21,13 @@ async function protect(req, res, next) {
         const user = await User.findById(decoded.id).select('-password');
         console.log('User fetched from DB:', user);
         if (!user) {
-            return res.status(401).json({ message: 'Not authorized, user not found or inactive' });
+            return res.status(401).json({ code: 401, message: 'Not authorized, user not found or inactive' });
         }
         req.user = user;
         next();
     } catch (error) {
         console.error('Error in token verification:', error);
-        return res.status(401).json({ message: 'Not authorized, token failed' });
+        return res.status(401).json({ code: 401, message: 'Not authorized, token failed' });
     }
 }
 export default protect;

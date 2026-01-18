@@ -29,8 +29,8 @@ const findingSchema = new mongoose.Schema(
     },
     status: {
       type: String, 
-      enum: ["in_progress", "completed", "postponed"],
-      default: "in_progress",
+      enum: ["progress", "completed", "postponed"],
+      default: "progress",
       required: true 
     },
     lokasi: { 
@@ -52,7 +52,7 @@ const findingSchema = new mongoose.Schema(
         action: { 
           type: String
         },
-        status: { 
+        changestatus: { 
           type: String
         },
         by: { 
