@@ -10,9 +10,9 @@ async function testUserSchema() {
     // Create a new user
     const user = await User.create(
         {
-            name: "alankeren",
-            email: `bangalan@gmail.com`,
-            password: "alan1234",
+            name: "alan",
+            email: "bangalan@gmail.com",
+            password: "12345678",
             position: "ICT Main. Support Jr. Assistant",
             division: "ICT",
             isActive: true,
@@ -22,7 +22,7 @@ async function testUserSchema() {
 
     console.log("User created:", user);
 
-    const isMatch = await user.comparePassword("alan");
+    const isMatch = await user.comparePassword("12345678");
     console.log("Password match:", isMatch);
 
     await mongoose.disconnect();

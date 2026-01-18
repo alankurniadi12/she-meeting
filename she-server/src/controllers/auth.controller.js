@@ -1,4 +1,4 @@
-import { loginService } from "../services/auth.service.js";
+import { loginService, registerService } from "../services/auth.service.js";
 
 //route handler hanya boleh ada 3 parlameter: req, res, next
 // jika ada 4 parameter (err, req, res, next), maka itu adalah error handling middleware
@@ -14,4 +14,15 @@ const loginController = async (req, res, next) => {
   }
 };
 
-export { loginController };
+const registerController = async (req, res, next) => {
+  try {
+    console.log("Register request body:", req.body);
+    const result = await registerService(req.body);
+    return res.status(201).json(result);
+  } catch (error) {
+    console.error("Error in registerController:", error);
+    next(error);
+  }
+};
+
+export { loginController, registerController };

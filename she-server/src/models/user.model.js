@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import { hashPassword, comparePassword } from "../utils/hash.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -45,19 +45,14 @@ const userSchema = new mongoose.Schema(
 
 // hasil hash password ini bisa di lihat pada mongodb 
 userSchema.pre("save", async function () {
-
   if (!this.isModified("password")) return;
-
-  this.password = await bcrypt.hash(this.password, 12);
-
+  this.password = await hashPassword(this.password);
 });
 
 // mengembalikan nilai boolean, fungsi ini dipanggil pada testUserSchema.js 
 // bukti keberhasilanya di testUserSchema.js true/false
 userSchema.methods.comparePassword = async function (candidatePassword) {
-
-  return await bcrypt.compare(candidatePassword, this.password);
-
+  return await comparePassword(candidatePassword, this.password);
 };
 
 const User = mongoose.model("User", userSchema);
