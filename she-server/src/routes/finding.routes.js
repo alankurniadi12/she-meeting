@@ -14,6 +14,6 @@ router.post("/", protect, createFinding);
 router.get('/list', getAllFindings);
 router.get('/:id', protect, getFindingById);
 router.put('/:id', protect, updateFinding);
-router.delete('/:id', deleteFinding);
+router.delete('/:id', protect, deleteFinding);
 
 export default router;

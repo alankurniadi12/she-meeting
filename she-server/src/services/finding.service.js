@@ -32,20 +32,27 @@ async function createFindingService({ description, reportedAt, division, targetD
   };
 }
 
-async function getAllFindingsService(filters = {}) {
-  const findings = await findingRepository.findAll(filters);
+async function getAllFindingsService(filters = {}, options = {}) {
+  const result = await findingRepository.findAllPaged(filters, options);
+  if (!result) throw new AppError('Gagal mengambil daftar temuan', 500);
   return {
     code: 200,
     status: 'SUCCESS',
     message: 'Daftar findings',
-    data: findings,
+    data: result.docs,
+    meta: {
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages: result.totalPages,
+    },
   };
 }
 
 async function getFindingByIdService(id) {
     console.log("Service Fetching finding with ID:", id);
   const finding = await findingRepository.findById(id);
-  if (!finding) throw new AppError('Finding tidak ditemukan', 404);
+  if (!finding) throw new AppError('Data tidak ditemukan', 404);
   return {
     code: 200,
     status: 'SUCCESS',
@@ -56,7 +63,7 @@ async function getFindingByIdService(id) {
 
 async function updateFindingService(id, payload, userId) {
   const existing = await findingRepository.findById(id);
-  if (!existing) throw new AppError('Finding tidak ditemukan', 404);
+  if (!existing) throw new AppError('Data tidak ditemukan', 404);
 
   const logs = existing.logs || [];
   logs.push({
@@ -70,20 +77,20 @@ async function updateFindingService(id, payload, userId) {
   return {
     code: 200,
     status: 'SUCCESS',
-    message: 'Finding berhasil diperbarui',
+    message: 'Temuan berhasil diperbarui',
     data: updated,
   };
 }
 
 async function deleteFindingService(id) {
   const existing = await findingRepository.findById(id);
-  if (!existing) throw new AppError('Finding tidak ditemukan', 404);
+  if (!existing) throw new AppError('Data tidak ditemukan', 404);
 
   await findingRepository.deleteById(id);
   return {
     code: 200,
     status: 'SUCCESS',
-    message: 'Finding berhasil dihapus',
+    message: 'Temuan berhasil dihapus',
     data: null,
   };
 }

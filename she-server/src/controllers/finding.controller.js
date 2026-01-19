@@ -25,8 +25,10 @@ export const createFinding = async (req, res, next) => {
 
 export const getAllFindings = async (req, res, next) => {
   try {
-    const filters = req.query || {};
-    const result = await getAllFindingsService(filters);
+    const { page, limit, sort, ...rest } = req.query || {};
+    const filters = { ...rest };
+    const options = { page, limit, sort };
+    const result = await getAllFindingsService(filters, options);
     return res.status(result.code).json(result);
   } catch (error) {
     console.error('Error in getAllFindings:', error);
