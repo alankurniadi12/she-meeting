@@ -1,34 +1,55 @@
-import { ref } from 'vue'
+import { defineStore } from 'pinia'
+import api from '@/utils/api'
 
-const isAuthenticated = ref(
-  localStorage.getItem('isAdminLogin') === 'true'
-)
+export const useAuth = defineStore('auth', {
+  state: () => ({
+    isAuthenticated: localStorage.getItem('isAdminLogin') === 'true',
+    admin: JSON.parse(localStorage.getItem('adminUser')) || null,
+    token: localStorage.getItem('authToken') || null
+  }),
+  persist: true,
+  actions: {
+    // low-level local login (used as a fallback/dev)
+    login(data) {
+      this.isAuthenticated = true
+      this.admin = data
+      localStorage.setItem('isAdminLogin', 'true')
+      localStorage.setItem('adminUser', JSON.stringify(data))
+    },
 
-const admin = ref(
-  JSON.parse(localStorage.getItem('adminUser')) || null
-)
+    // login via API: expects { token, user } in response
+    async loginWithCredentials(credentials) {
+      console.log('Auth Store: loginWithCredentials', credentials)
+      const res = await api.apiPost('/auth/login', credentials)
+      // adapt to your API response shape
+      const token = res.token || res.accessToken || null
+      const user = res.user || res.admin || null
 
-export function useAuth() {
-  const login = (data) => {
-    isAuthenticated.value = true
-    admin.value = data
+      if (token) {
+        this.token = token
+        api.setAuthToken(token)
+        localStorage.setItem('authToken', token)
+        localStorage.setItem('isAdminLogin', 'true')
+      }
 
-    localStorage.setItem('isAdminLogin', 'true')
-    localStorage.setItem('adminUser', JSON.stringify(data))
+      if (user) {
+        this.admin = user
+        localStorage.setItem('adminUser', JSON.stringify(user))
+      }
+
+      this.isAuthenticated = !!token
+
+      return { token, user }
+    },
+
+    logout() {
+      this.isAuthenticated = false
+      this.admin = null
+      this.token = null
+      localStorage.removeItem('isAdminLogin')
+      localStorage.removeItem('adminUser')
+      localStorage.removeItem('authToken')
+      api.setAuthToken(null)
+    }
   }
-
-  const logout = () => {
-    isAuthenticated.value = false
-    admin.value = null
-
-    localStorage.removeItem('isAdminLogin')
-    localStorage.removeItem('adminUser')
-  }
-
-  return {
-    isAuthenticated,
-    admin,
-    login,
-    logout
-  }
-}
+})

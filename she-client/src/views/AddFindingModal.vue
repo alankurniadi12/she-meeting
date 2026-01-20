@@ -6,7 +6,7 @@
 
             <!-- modal -->
             <div class="relative max-w-2xl mx-auto mt-20 bg-white rounded-2xl shadow-lg p-6">
-                <FindingForm @cancel="$emit('close')" @submit="$emit('submitted', $event)" />
+                <FindingForm @cancel="$emit('close')" @submit="$emit('submitted', $event)" @error="$emit('error', $event)" />
             </div>
         </div>
     </Teleport>

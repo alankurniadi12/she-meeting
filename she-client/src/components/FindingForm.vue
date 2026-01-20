@@ -9,6 +9,12 @@
     </div>
 
     <div>
+        <div v-if="isSubmitting" class="absolute inset-0 z-50 bg-white/60 flex items-center justify-center rounded-2xl">
+            <svg class="w-10 h-10 text-green-600 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+        </div>
         <label class="text-sm font-medium text-slate-700">
             Deskripsi Temuan
         </label>
@@ -105,12 +111,16 @@
 
 
     <div class="flex justify-end gap-3 pt-4 border-t">
-        <button type="button" class="px-4 py-2 border rounded-lg" @click="$emit('cancel')">
+        <button type="button" class="px-4 py-2 border rounded-lg disabled:opacity-50" @click="$emit('cancel')" :disabled="isSubmitting">
             Batal
         </button>
 
         <button class="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center gap-2 disabled:opacity-50"
             :disabled="isSubmitting || !form.description" @click="submit">
+            <svg v-if="isSubmitting" class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"></circle>
+                <path d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor" class="opacity-75"></path>
+            </svg>
             <span v-if="isSubmitting">Menyimpan...</span>
             <span v-else>Simpan Temuan</span>
         </button>
@@ -120,10 +130,12 @@
 
 <script setup>
 import { ref } from 'vue'
+import api from '@/utils/api'
 
 const isSubmitting = ref(false)
 const isSuccess = ref(false)
 const errors = ref({})
+const apiError = ref('')
 const touched = ref({
     description: false,
     reporterName: false,
@@ -177,10 +189,30 @@ const submit = async () => {
 
     isSubmitting.value = true
 
-    // simulasi request backend
-    await new Promise((resolve) => setTimeout(resolve, 800))
+    // attempt to post to API
+    let created = null
+    try {
+        apiError.value = ''
+        const payload = {
+            description: form.value.description,
+            lokasi: form.value.lokasi,
+            reporterType: form.value.reporterType,
+            reporterName: form.value.reporterName,
+            to_division: form.value.to_division,
+            status: 'Draf',
+            catatan: form.value.catatan
+        }
 
-    const newFinding = {
+        const res = await api.apiPost('/findings', payload)
+        // assume API returns created resource or { data: created }
+        created = Array.isArray(res) ? res[0] : (res.data || res.created || res || null)
+    } catch (err) {
+        apiError.value = err.message || 'Gagal menyimpan ke server.'
+        created = null
+        emit('error', apiError.value)
+    }
+
+    const newFinding = created || {
         id: Date.now(),
         description: form.value.description,
         lokasi: form.value.lokasi,
@@ -201,6 +233,11 @@ const submit = async () => {
     }
 
     emit('submit', newFinding)
+
+    // show success or fallback warning
+    if (apiError.value) {
+        // already emitted error to parent; also show local error area
+    }
 
     isSubmitting.value = false
     isSuccess.value = true

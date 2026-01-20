@@ -3,7 +3,7 @@ import "tailwindcss"
 import { ref } from 'vue'
 import { useAuth } from '@/stores/auth'
 
-const { isAuthenticated, admin, logout } = useAuth()
+const auth = useAuth()
 const showMenu = ref(false)
 
 const toggleMenu = () => {
@@ -18,7 +18,7 @@ const toggleMenu = () => {
         <!-- RIGHT SIDE -->
         <div class="relative">
             <!-- BELUM LOGIN -->
-            <button v-if="!isAuthenticated" class="text-sm font-medium text-green-600 hover:underline"
+            <button v-if="!auth.isAuthenticated" class="text-sm font-medium text-green-600 hover:underline"
                 @click="$emit('open-login')">
                 Masuk
             </button>
@@ -27,7 +27,7 @@ const toggleMenu = () => {
             <div v-else>
                 <button @click="toggleMenu"
                     class="w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">
-                    {{ admin?.name?.charAt(0) || 'A' }}
+                    {{ auth.admin?.name?.charAt(0) || 'A' }}
                 </button>
 
                 <!-- DROPDOWN -->
@@ -40,7 +40,7 @@ const toggleMenu = () => {
                         ℹ️ Tentang
                     </button>
                     <button class="w-full px-4 py-2 text-left hover:bg-gray-100 flex gap-2 text-red-600"
-                        @click="logout">
+                        @click="auth.logout">
                         🚪 Keluar
                     </button>
                 </div>

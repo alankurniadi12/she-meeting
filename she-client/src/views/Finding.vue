@@ -13,7 +13,7 @@
             </button>
         </div>
 
-        <addFindingModal :open="isAddModalOpen" @close="isAddModalOpen = false" @submintted="handleAddFinding" />
+        <addFindingModal :open="isAddModalOpen" @close="isAddModalOpen = false" @submitted="handleAddFinding" @error="(m) => showToast(m, 'error')" />
 
         <!-- Filter bar -->
         <div class="bg-white rounded-2xl shadow p-4 mb-4 flex flex-col">
@@ -138,10 +138,13 @@ import { dummyTemuan } from '../dataDummy.js';
 import { useRoute } from 'vue-router';
 import { watch, onMounted } from 'vue';
 import AddFindingModal from './AddFindingModal.vue';
+import api from '@/utils/api'
 
 const route = useRoute();
 const isFromDashboard = ref(false);
-const allTemuan = ref(dummyTemuan);
+const allTemuan = ref([]);
+const loading = ref(false)
+const error = ref('')
 const currentPage = ref(1);
 const perPage = 10;
 const newDate = ref('')
@@ -218,6 +221,22 @@ const applyStatusFromQuery = () => {
 };
 
 onMounted(applyStatusFromQuery);
+// fetch findings from API
+onMounted(async () => {
+    loading.value = true
+    error.value = ''
+    try {
+        const res = await api.apiGet('/findings/list')
+        console.log('Finding = Fetched findings:', res)
+        // adapt to API shape; assume res is array or { data: [...] }
+        allTemuan.value = Array.isArray(res) ? res : (res.data || res.items || dummyTemuan)
+    } catch (err) {
+        error.value = err.message || 'Gagal mengambil data temuan. Menggunakan data lokal.'
+        //allTemuan.value = dummyTemuan
+    } finally {
+        loading.value = false
+    }
+})
 
 watch(currentPage, () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

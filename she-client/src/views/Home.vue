@@ -20,7 +20,7 @@
                     </button>
                 </div>
             </div>
-            <addFindingModal :open="isAddModalOpen" @close="isAddModalOpen = false" @submintted="handleAddFinding" />
+            <addFindingModal :open="isAddModalOpen" @close="isAddModalOpen = false" @submitted="handleAddFinding" @error="(m) => showToast(m, 'error')" />
 
             <ItemList :items="latestTemuan" :showSeeAll="true" @seeAll="handleSeeAll" />
         </div>
