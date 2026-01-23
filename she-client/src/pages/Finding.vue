@@ -134,17 +134,16 @@
 <script setup>
 import { ref, computed } from 'vue'
 import ItemList from '../components/ItemList.vue';
-import { dummyTemuan } from '../dataDummy.js';
 import { useRoute } from 'vue-router';
 import { watch, onMounted } from 'vue';
 import AddFindingModal from './AddFindingModal.vue';
-import api from '@/utils/api'
+import { useFindingStore } from '@/stores/finding'
 
 const route = useRoute();
 const isFromDashboard = ref(false);
-const allTemuan = ref([]);
-const loading = ref(false)
-const error = ref('')
+const findingStore = useFindingStore()
+const loading = computed(() => findingStore.loading)
+const error = computed(() => findingStore.error)
 const currentPage = ref(1);
 const perPage = 10;
 const newDate = ref('')
@@ -159,7 +158,7 @@ const filters = ref({
 
 const filteredTemuan = computed(() => {
     // 1. FILTER
-    let result = allTemuan.value.filter((t) => {
+    let result = findingStore.items.filter((t) => {
         const matchStatus =
             filters.value.status === 'Semua' || t.status === filters.value.status
 
@@ -169,8 +168,8 @@ const filteredTemuan = computed(() => {
         const keyword = filters.value.search.toLowerCase()
         const matchSearch =
             !keyword ||
-            t.description.toLowerCase().includes(keyword) ||
-            t.name.toLowerCase().includes(keyword)
+            (t.description && t.description.toLowerCase().includes(keyword)) ||
+            (t.name && t.name.toLowerCase().includes(keyword))
 
         const matchDate =
             filters.value.selectedDates.length === 0 ||
@@ -193,10 +192,14 @@ const filteredTemuan = computed(() => {
     return result
 })
 
-const handleAddFinding = (newFinding) => {
-    allTemuan.value.unshift(newFinding)
-    isAddModalOpen.value = false
-    showToast('Temuan berhasil ditambahkan')
+const handleAddFinding = async (newFinding) => {
+    try {
+        await findingStore.addFinding(newFinding)
+        isAddModalOpen.value = false
+        showToast('Temuan berhasil ditambahkan')
+    } catch (err) {
+        showToast(err.message || 'Gagal menambahkan temuan', 'error')
+    }
 }
 
 const totalPages = computed(() => {
@@ -221,21 +224,9 @@ const applyStatusFromQuery = () => {
 };
 
 onMounted(applyStatusFromQuery);
-// fetch findings from API
+// fetch findings via store
 onMounted(async () => {
-    loading.value = true
-    error.value = ''
-    try {
-        const res = await api.apiGet('/findings/list')
-        console.log('Finding = Fetched findings:', res)
-        // adapt to API shape; assume res is array or { data: [...] }
-        allTemuan.value = Array.isArray(res) ? res : (res.data || res.items || dummyTemuan)
-    } catch (err) {
-        error.value = err.message || 'Gagal mengambil data temuan. Menggunakan data lokal.'
-        //allTemuan.value = dummyTemuan
-    } finally {
-        loading.value = false
-    }
+    await findingStore.fetchFindings()
 })
 
 watch(currentPage, () => {

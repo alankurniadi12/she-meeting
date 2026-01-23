@@ -130,7 +130,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import api from '@/utils/api'
 
 const isSubmitting = ref(false)
 const isSuccess = ref(false)
@@ -189,30 +188,18 @@ const submit = async () => {
 
     isSubmitting.value = true
 
-    // attempt to post to API
-    let created = null
-    try {
-        apiError.value = ''
-        const payload = {
-            description: form.value.description,
-            lokasi: form.value.lokasi,
-            reporterType: form.value.reporterType,
-            reporterName: form.value.reporterName,
-            to_division: form.value.to_division,
-            status: 'Draf',
-            catatan: form.value.catatan
-        }
-
-        const res = await api.apiPost('/findings', payload)
-        // assume API returns created resource or { data: created }
-        created = Array.isArray(res) ? res[0] : (res.data || res.created || res || null)
-    } catch (err) {
-        apiError.value = err.message || 'Gagal menyimpan ke server.'
-        created = null
-        emit('error', apiError.value)
+    // build payload/newFinding and emit to parent; parent will handle persistence
+    const payload = {
+        description: form.value.description,
+        lokasi: form.value.lokasi,
+        reporterType: form.value.reporterType,
+        reporterName: form.value.reporterName,
+        to_division: form.value.to_division,
+        status: 'Draf',
+        catatan: form.value.catatan
     }
 
-    const newFinding = created || {
+    const newFinding = {
         id: Date.now(),
         description: form.value.description,
         lokasi: form.value.lokasi,
@@ -232,7 +219,8 @@ const submit = async () => {
         ]
     }
 
-    emit('submit', newFinding)
+    // emit both the payload (for persistence) and the presentation object
+    emit('submit', { payload, presentation: newFinding })
 
     // show success or fallback warning
     if (apiError.value) {

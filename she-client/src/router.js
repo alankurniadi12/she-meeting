@@ -1,11 +1,11 @@
 import { createWebHistory, createRouter } from "vue-router";
-import { useAuth } from "./stores/auth";
-const Home = () => import('./views/Home.vue')
-const Finding = () => import('./views/Finding.vue')
-const PersonelView = () => import('./views/PersonelView.vue')
-const PersonelDetailView = () => import('./views/PersonelDetailView.vue')
-const FindingDetail = () => import('./views/FindingDetail.vue')
-const Login = () => import('./views/Login.vue')
+import { useAuth } from "./composables/auth";
+const Home = () => import('./pages/Home.vue')
+const Finding = () => import('./pages/Finding.vue')
+const PersonelView = () => import('./pages/PersonelView.vue')
+const PersonelDetailView = () => import('./pages/PersonelDetailView.vue')
+const FindingDetail = () => import('./pages/FindingDetail.vue')
+const Login = () => import('./pages/Login.vue')
 
 const routes = [
     { path: '/', name: 'Home', component: Home },

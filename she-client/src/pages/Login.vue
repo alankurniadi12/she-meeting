@@ -6,7 +6,7 @@
 import { useRouter, useRoute } from 'vue-router'
 import { watch } from 'vue'
 import LoginModal from './LoginModal.vue'
-import { useAuth } from '@/stores/auth'
+import { useAuth } from '@/composables/auth'
 
 const router = useRouter()
 const route = useRoute()
@@ -21,22 +21,22 @@ const onCancel = () => {
 
     // if redirect target requires auth, don't navigate there (would redirect back to /login)
     if (requiresAuth) {
-      router.replace('/').catch(() => {})
+      router.replace('/').catch(() => { })
       return
     }
 
     // avoid pushing to the same route (no-op)
     const current = router.currentRoute.value && router.currentRoute.value.fullPath
     if (redirect === current) {
-      router.replace('/').catch(() => {})
+      router.replace('/').catch(() => { })
       return
     }
 
     router.push(redirect).catch(() => {
-      router.replace('/').catch(() => {})
+      router.replace('/').catch(() => { })
     })
   } catch (e) {
-    router.replace('/').catch(() => {})
+    router.replace('/').catch(() => { })
   }
 }
 

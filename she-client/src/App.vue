@@ -3,7 +3,7 @@ import { ref } from 'vue';
 const showLogin = ref(false)
 import Header from './components/Header.vue';
 import Sidebar from './components/Sidebar.vue';
-import LoginModal from './views/LoginModal.vue';
+import LoginModal from './pages/LoginModal.vue';
 </script>
 
 <template>
