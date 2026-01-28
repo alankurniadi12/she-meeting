@@ -1,5 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
-import { useAuth } from "./composables/auth";
+import { useAuth } from "./stores/auth";
 const Home = () => import('./pages/Home.vue')
 const Finding = () => import('./pages/Finding.vue')
 const PersonelView = () => import('./pages/PersonelView.vue')

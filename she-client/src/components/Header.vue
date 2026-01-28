@@ -1,7 +1,7 @@
 <script setup>
 import "tailwindcss"
 import { ref } from 'vue'
-import { useAuth } from '@/composables/auth'
+import { useAuth } from '@/stores/auth'
 
 const auth = useAuth()
 const showMenu = ref(false)

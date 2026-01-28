@@ -5,7 +5,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import { router } from './router'
 import api from '@/utils/api'
-import { useAuth } from '@/composables/auth'
+import { useAuth } from '@/stores/auth'
 
 const app = createApp(App)
 const pinia = createPinia()
