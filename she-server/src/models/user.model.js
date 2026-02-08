@@ -15,10 +15,31 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    placeOfBirth: {
+      type: String,
+      trim: true,
+    },
+    dateOfBirth: {
+      type: Date,
+      trim: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    employeeId: {
+      type: String,
+      unique: true,
+      trim: true,
+    },
     password: {
       type: String,
       required: true,
-      minlegth: 6,
+      minlength: 6,
       select: false,
     },
     position: {
@@ -29,6 +50,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    company: {
+      type: String,
+      trim: true,
+    },
+    employmentStatus: {
+      type: String,
+      enum: ["Permanent", "Contract", "Internship"],
+      default: "Contract",
+    },
+    yearJoined: {
+      type: Number,
+    },
+    retirementAge: {
+      type: Number,
     },
     isActive: {
       type: Boolean,
