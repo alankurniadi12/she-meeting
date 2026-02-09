@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useAuth } from '@/stores/auth'
+import { useAuth } from '@/stores/authStore'
 
 const emit = defineEmits(['close'])
 const auth = useAuth()

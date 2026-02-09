@@ -6,7 +6,7 @@
 import { useRouter, useRoute } from 'vue-router'
 import { watch } from 'vue'
 import LoginModal from './LoginModal.vue'
-import { useAuth } from '@/stores/auth'
+import { useAuth } from '@/stores/authStore'
 
 const router = useRouter()
 const route = useRoute()

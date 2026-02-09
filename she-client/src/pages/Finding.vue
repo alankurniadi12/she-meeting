@@ -137,7 +137,7 @@ import ItemList from '../components/ItemList.vue';
 import { useRoute } from 'vue-router';
 import { watch, onMounted } from 'vue';
 import AddFindingModal from './AddFindingModal.vue';
-import { useFindingStore } from '@/stores/finding'
+import { useFindingStore } from '@/stores/findingStore'
 
 const route = useRoute();
 const isFromDashboard = ref(false);

@@ -47,50 +47,33 @@
         </div>
 
         <!-- List Personil -->
-        <PersonelList :items="filteredPersonil" @select="handleSelectPersonel" />
+        <PersonelList :items="filtersWatch" @select="handleSelectPersonel" />
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import PersonelList from '@/components/PersonelList.vue'
-import { dummyPersonil } from '@/dataDummy.js'
+import { useUsersStore }  from '@/stores/usersStore.js'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const usersStore = useUsersStore()
+const loading = computed(() => usersStore.loading)
 
-const allPersonil = ref(dummyPersonil)
+onMounted(() => {
+    usersStore.fetchUsers()
+})
 
 const filters = ref({
     division: 'Semua',
     search: '',
     sort: 'tertinggi'
-})
+}) 
 
-const filteredPersonil = computed(() => {
-    let result = allPersonil.value.filter((p) => {
-        const matchDivision =
-            filters.value.division === 'Semua' ||
-            p.divisi.toLowerCase().includes(filters.value.division.toLowerCase())
-
-        const keyword = filters.value.search.toLowerCase()
-        const matchSearch =
-            !keyword || p.nama.toLowerCase().includes(keyword)
-
-        return matchDivision && matchSearch
-    })
-
-    // urutkan berdasar skor
-    result = result.sort((a, b) => {
-        if (filters.value.sort === 'tertinggi') {
-            return b.jumlahTemuan - a.jumlahTemuan
-        } else {
-            return a.jumlahTemuan - b.jumlahTemuan
-        }
-    })
-
-    return result
-})
+const filtersWatch = computed(() => 
+    usersStore.filteredUsers(filters.value)
+)  
 
 const resetFilters = () => {
     filters.value = {
@@ -100,10 +83,10 @@ const resetFilters = () => {
     }
 }
 
-const handleSelectPersonel = (person) => {
+const handleSelectPersonel = (user) => {
     router.push({
         name: 'PersonelDetail',
-        params: { id: person.id }
+        params: { id: user.id }
     })
 }
 </script>

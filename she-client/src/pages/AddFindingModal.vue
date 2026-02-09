@@ -14,7 +14,7 @@
 
 <script setup>
     import FindingForm from '../components/FindingForm.vue'
-    import { useFindingStore } from '@/stores/finding'
+    import { useFindingStore } from '@/stores/findingStore'
     import { getCurrentInstance } from 'vue'
 
     const props = defineProps({

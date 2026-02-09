@@ -16,24 +16,24 @@
                     <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
                         <img v-if="p.foto" :src="p.foto" alt="Foto personil" class="w-full h-full object-cover" />
                         <span v-else class="text-sm font-semibold text-gray-700">
-                            {{ getInitial(p.nama) }}
+                            {{ getInitial(p.name) }}
                         </span>
                     </div>
 
                     <!-- Nama + divisi + temuan terakhir -->
                     <div class="flex flex-col">
                         <h3 class="font-semibold text-gray-800 text-sm leading-tight">
-                            {{ p.nama }}
+                            {{ p.name }}
                         </h3>
 
-                        <p v-if="p.divisi" class="text-xs text-gray-500">
-                            {{ p.divisi }}
+                        <p v-if="p.division" class="text-xs text-gray-500">
+                            {{ p.division  }}
                         </p>
 
                         <p class="text-xs text-gray-500 mt-1">
-                            Update:
+                            Kontribusi terakhir:
                             <span class="font-medium text-gray-700">
-                                {{ formatLastFindingDate(p.tanggalTemuanTerbaru) }}
+                                {{ formatLastFindingDate(p.lastFindingDate) }}
                             </span>
                         </p>
                     </div>
@@ -59,7 +59,9 @@ const props = defineProps({
         type: Array,
         required: true
     }
+
 })
+console.log('Props items:', props.items);
 
 // format: Rabu, 10 Des 2025
 const formatLastFindingDate = (iso) => {
