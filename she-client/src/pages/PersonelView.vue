@@ -25,11 +25,11 @@
 
             <!-- Urutkan skor -->
             <div class="flex flex-col">
-                <label class="text-sm text-gray-600 mb-1">Urutkan Skor</label>
+                <label class="text-sm text-gray-600 mb-1">Temuan</label>
                 <select v-model="filters.sort"
                     class="border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring focus:ring-green-200">
-                    <option value="tertinggi">Tertinggi ke Terendah</option>
-                    <option value="terendah">Terendah ke Tertinggi</option>
+                    <option value="terbanyak">Terbanyak</option>
+                    <option value="terendah">Paling Sedikit</option>
                 </select>
             </div>
 
@@ -68,7 +68,7 @@ onMounted(() => {
 const filters = ref({
     division: 'Semua',
     search: '',
-    sort: 'tertinggi'
+    sort: 'terbanyak'
 }) 
 
 const filtersWatch = computed(() => 
@@ -79,7 +79,7 @@ const resetFilters = () => {
     filters.value = {
         division: 'Semua',
         search: '',
-        sort: 'tertinggi'
+        sort: 'terbanyak'
     }
 }
 

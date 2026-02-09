@@ -42,7 +42,7 @@
                 <!-- Kanan: jumlah temuan -->
                 <div class="flex flex-col items-end">
                     <span class="text-lg font-bold text-gray-800 leading-none">
-                        {{ p.jumlahTemuan ?? 0 }}
+                        {{ p.countFindings ?? 0 }}
                     </span>
                     <span class="text-xs text-gray-500">
                         Temuan
@@ -59,7 +59,6 @@ const props = defineProps({
         type: Array,
         required: true
     }
-
 })
 console.log('Props items:', props.items);
 

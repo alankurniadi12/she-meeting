@@ -22,10 +22,11 @@ export const useUsersStore = defineStore("users", {
         });
 
         result = result.sort((a, b) => {
-            if (filters.sort === 'tertinggi') {
-                return b.jumlahTemuan - a.jumlahTemuan
+            if (filters.sort === 'terbanyak') {
+                
+                return b.countFindings - a.countFindings
             } else {
-                return a.jumlahTemuan - b.jumlahTemuan
+                return a.countFindings - b.countFindings
             }  
         });
         return result;
