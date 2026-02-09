@@ -1,4 +1,4 @@
-import { getUsersService } from '../services/user.service.js';
+import { getUsersService, updateUserService } from '../services/user.service.js';
 
 const getUsersController = async (req, res, next) => {
   try {
@@ -13,4 +13,16 @@ const getUsersController = async (req, res, next) => {
   }
 };
 
-export { getUsersController };
+const updateUserController = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const payload = req.body;
+    const result = await updateUserService(userId, payload);
+    return res.status(result.code).json(result);
+  } catch (error) {
+    console.error('Error in updateUserController:', error);
+    next(error);
+  }
+};
+
+export { getUsersController, updateUserController };

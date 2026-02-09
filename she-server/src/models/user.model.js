@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    employeeId: {
+    employId: {
       type: String,
       unique: true,
       trim: true,
@@ -65,6 +65,14 @@ const userSchema = new mongoose.Schema(
     },
     retirementAge: {
       type: Number,
+    },
+    countFindings: {
+      type: Number,
+      default: 0,
+    },
+    profilePicture: {
+      type: String,
+      trim: true,
     },
     isActive: {
       type: Boolean,

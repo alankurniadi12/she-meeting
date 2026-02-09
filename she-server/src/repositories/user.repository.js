@@ -1,4 +1,5 @@
 import User from '../models/user.model.js';
+import { hashPassword } from '../utils/hash.js';
 
 async function existsByEmail(email) {
   return await User.exists({ email });
@@ -10,6 +11,26 @@ async function findByEmailWithPassword(email) {
 
 async function createUser(payload) {
   const user = await User.create(payload);
+  return user;
+}
+
+async function updatedUser(userId, payload) {
+  const updatePayload = { ...payload };
+  if (updatePayload.password) {
+    updatePayload.password = await hashPassword(updatePayload.password);
+  }
+  const user = await User.findByIdAndUpdate(userId, updatePayload, { new: true });
+  return user;
+}
+
+
+async function incrementFindingsCount(userId, increment = 1) {
+  // use $inc to atomically increment the countFindings field
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $inc: { countFindings: increment } },
+    { new: true }
+  ).select('-password');
   return user;
 }
 
@@ -39,4 +60,4 @@ async function findAllUsersPaged(filter = {}, options = {}) {
   };
 }
 
-export { existsByEmail, findByEmailWithPassword, createUser, findAllUsers, findAllUsersPaged };
+export { existsByEmail, findByEmailWithPassword, createUser, findAllUsers, findAllUsersPaged, updatedUser, incrementFindingsCount };

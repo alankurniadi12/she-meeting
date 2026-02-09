@@ -22,4 +22,18 @@ async function getUsersService(filter = {}, options = {}) {
   };
 }
 
-export { getUsersService };
+async function updateUserService(userId, payload) {
+  const updatedUser = await userRepository.updatedUser(userId, payload);
+  if (!updatedUser) {
+    throw new AppError('Gagal memperbarui data user', 500);
+  }
+
+  return {
+    code: 200,
+    status: 'SUCCESS',
+    message: 'Data user berhasil diperbarui',
+    data: updatedUser,
+  };
+}
+
+export { getUsersService, updateUserService };

@@ -1,5 +1,6 @@
 import AppError from '../utils/AppError.js';
 import * as findingRepository from '../repositories/finding.repository.js';
+import * as userRepository from '../repositories/user.repository.js';
 
 async function createFindingService({ description, reportedAt, division, targetDivision, lokasi, catatan, images, userId }) {
   if (!description || !reportedAt || !division || !targetDivision || !lokasi) {
@@ -23,6 +24,11 @@ async function createFindingService({ description, reportedAt, division, targetD
       },
     ],
   });
+
+  // increment the user's countFindings atomically
+  if (userId) {
+    await userRepository.incrementFindingsCount(userId, 1);
+  }
 
   return {
     code: 201,
