@@ -7,33 +7,36 @@
             </div>
 
             <!-- List item personil -->
-            <button v-for="p in items" :key="p.id" type="button"
+            <button v-for="user in items" :key="user.id" type="button"
                 class="w-full bg-gray-100 rounded-2xl px-4 py-3 flex items-center justify-between shadow-sm border text-left hover:bg-gray-200 transition-colors"
-                @click="$emit('select', p)">
+                @click="$emit('select', user)">
                 <!-- Kiri: Foto + info dasar -->
                 <div class="flex items-center space-x-3">
                     <!-- Avatar -->
                     <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
-                        <img v-if="p.foto" :src="p.foto" alt="Foto personil" class="w-full h-full object-cover" />
+                        <img v-if="user.foto" :src="user.foto" alt="Foto personil" class="w-full h-full object-cover" />
                         <span v-else class="text-sm font-semibold text-gray-700">
-                            {{ getInitial(p.name) }}
+                            {{ getInitial(user.name) }}
                         </span>
                     </div>
 
                     <!-- Nama + divisi + temuan terakhir -->
                     <div class="flex flex-col">
                         <h3 class="font-semibold text-gray-800 text-sm leading-tight">
-                            {{ p.name }}
+                            {{ user.name }}
                         </h3>
 
-                        <p v-if="p.division" class="text-xs text-gray-500">
-                            {{ p.division  }}
+                        <p v-if="user.division" class="text-xs text-gray-500">
+                            {{ user.division  }}
                         </p>
 
                         <p class="text-xs text-gray-500 mt-1">
-                            Kontribusi terakhir:
+                            Temuan Terakhir:
                             <span class="font-medium text-gray-700">
-                                {{ formatLastFindingDate(p.lastFindingDate) }}
+                                <span v-if="!user.latestContribution">Belum Ada</span>
+                                <span v-else>
+                                {{ formatLastFindingDate(user.latestContribution) }}
+                                </span>
                             </span>
                         </p>
                     </div>
@@ -42,7 +45,7 @@
                 <!-- Kanan: jumlah temuan -->
                 <div class="flex flex-col items-end">
                     <span class="text-lg font-bold text-gray-800 leading-none">
-                        {{ p.countFindings ?? 0 }}
+                        {{ user.countFindings ?? 0 }}
                     </span>
                     <span class="text-xs text-gray-500">
                         Temuan
