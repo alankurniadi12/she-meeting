@@ -4,6 +4,7 @@ import * as userService from "@/services/userService";
 export const useUsersStore = defineStore("users", {
   state: () => ({
     users: [],
+    selectedUser: null,
     loading: false,
     error: null,
   }),
@@ -40,6 +41,37 @@ export const useUsersStore = defineStore("users", {
         this.users = await userService.getUsers();
       } catch (err) {
         this.error = err.message || "Failed to fetch users.";
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchUserById(id) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const user = await userService.getUserById(id);
+        this.selectedUser = user;
+        return user;
+      } catch (err) {
+        this.error = err.message || "Failed to fetch user.";
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async updateUser(id, userData) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const updatedUser = await userService.updateUser(id, userData);
+        const index = this.users.findIndex((u) => u._id === id);
+        if (index !== -1) {
+          this.users[index] = updatedUser;
+        }
+        return updatedUser;
+      } catch (err) {
+        this.error = err.message || "Failed to update user.";
+        throw err;
       } finally {
         this.loading = false;
       }

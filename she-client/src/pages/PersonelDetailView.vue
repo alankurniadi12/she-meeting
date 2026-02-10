@@ -1,12 +1,15 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useUsersStore } from '@/stores/usersStore.js'
 import { dummyPersonil } from '@/dataDummy.js'
 
 const route = useRoute()
 const router = useRouter()
+const usersStore = useUsersStore()
 
-const id = Number(route.params.id)
+const idUser = route.params.id
+console.log('PersonelDetailView: route param id =', idUser)
 
 const showSensitiveInfo = ref({
     birthDate: false,
@@ -16,26 +19,31 @@ const showSensitiveInfo = ref({
 
 const maskedText = (length = 6) => '*'.repeat(length);
 
+onMounted(async () => {
+    await usersStore.fetchUserById(idUser)
+})
+
 const person = computed(() =>
-    dummyPersonil.find((p) => p.id === id)
+    usersStore.selectedUser
 )
 
-if (!person.value) {
-    console.warn('Personel tidak ditemukan, id:', id)
-}
+console.log('PersonelDetailView: person name =', person.value?.name)
 
 const page = ref(1)
 const pageSize = 10
 
-const totalTemuan = computed(() => person.value?.temuan?.length || 0)
+const findingsList = computed(() =>
+    person.value?.findings || person.value?.temuan || []
+)
+const totalCountFindings = computed(() => findingsList.value.length)
 const totalPages = computed(() =>
-    Math.max(1, Math.ceil(totalTemuan.value / pageSize))
+    Math.max(1, Math.ceil(totalCountFindings.value / pageSize))
 )
 
-const pagedTemuan = computed(() => {
-    if (!person.value?.temuan) return []
+const pagedCountFindings = computed(() => {
+    if (!findingsList.value.length) return []
     const start = (page.value - 1) * pageSize
-    return person.value.temuan.slice(start, start + pageSize)
+    return findingsList.value.slice(start, start + pageSize)
 })
 
 // umur
@@ -75,6 +83,7 @@ const hitungMasaKerja = (tahunBergabung) => {
 
 // tanggal pensiun = lahir + usia pensiun
 const getTanggalPensiun = (tanggalLahir, usiaPensiun = 53) => {
+    console.log('getTanggalPensiun: tanggalLahir =', tanggalLahir, 'usiaPensiun =', usiaPensiun)
     if (!tanggalLahir) return null
     const t = new Date(tanggalLahir)
     t.setFullYear(t.getFullYear() + usiaPensiun)
@@ -168,10 +177,10 @@ const goBack = () => {
                     <!-- Foto -->
                     <div
                         class="relative z-10 w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-white/20 border border-white/40 flex items-center justify-center overflow-hidden shadow-md">
-                        <img v-if="person.foto" :src="person.foto" alt="Foto personil"
+                        <img v-if="person?.foto" :src="person?.foto" alt="Foto personil"
                             class="w-full h-full object-cover" />
                         <span v-else class="text-2xl font-bold text-white">
-                            {{ person.nama?.slice(0, 2).toUpperCase() }}
+                            {{ person?.name?.slice(0, 2).toUpperCase() }}
                         </span>
                     </div>
 
@@ -179,15 +188,15 @@ const goBack = () => {
                     <div class="relative z-10 flex-1 text-white">
                         <div class="flex flex-wrap items-center gap-3">
                             <h2 class="text-xl md:text-2xl font-semibold tracking-tight">
-                                {{ person.nama }}
+                                {{ person?.name }}
                             </h2>
                         </div>
 
                         <p class="text-sm opacity-95 mt-1">
-                            {{ person.jabatan }} · {{ person.divisi }}
+                            {{ person?.position }} · {{ person?.division }}
                         </p>
                         <p class="text-xs opacity-90 mt-1">
-                            {{ person.perusahaan }}
+                            {{ person?.company }}
                         </p>
 
                         <!-- mini stats di hero -->
@@ -203,7 +212,7 @@ const goBack = () => {
                                         PENGABDIAN
                                     </p>
                                     <p class="font-semibold text-[12px]">
-                                        {{ hitungMasaKerja(person.tahunBergabung) }}
+                                        {{ hitungMasaKerja(person?.yearJoined) }}
                                     </p>
                                 </div>
                             </div>
@@ -221,7 +230,7 @@ const goBack = () => {
                                     <p class="font-semibold text-[12px]">
                                         {{
                                             formatFullDate(
-                                                getTanggalPensiun(person.tanggalLahir, person.usiaPensiun)?.toISOString()
+                                                getTanggalPensiun(person?.dateOfBirth, person?.retirementAge)?.toISOString()
                                             )
                                         }}
                                     </p>
@@ -239,7 +248,7 @@ const goBack = () => {
                                         Temuan terbaru
                                     </p>
                                     <p class="font-semibold text-[12px]">
-                                        {{ formatShortDate(person.tanggalTemuanTerbaru) }}
+                                        {{ formatShortDate(person?.latestFindingsDate) }}
                                     </p>
                                 </div>
                             </div>
@@ -264,7 +273,7 @@ const goBack = () => {
                                 <div class="flex items-center justify-between gap-2">
                                     <p class="text-[13px] font-medium text-slate-800">
                                         <span v-if="showSensitiveInfo.birthDate">
-                                            {{ person.tempatLahir }}, {{ formatFullDate(person.tanggalLahir) }}
+                                            {{ person?.placeOfBirth }}, {{ formatFullDate(person?.dateOfBirth) }}
                                         </span>
                                         <span v-else class="text-slate-400">
                                             {{ maskedText(10) }}
@@ -285,7 +294,7 @@ const goBack = () => {
                                 <div class="flex items-center justify-between gap-2">
                                     <p class="text-[13px] font-medium  text-slate-800">
                                         <span v-if="showSensitiveInfo.age">
-                                            {{ hitungUmur(person.tanggalLahir) }} tahun
+                                            {{ hitungUmur(person?.dateOfBirth) }}
                                         </span>
                                         <span v-else class="text-slate-400">
                                             {{ maskedText(10) }}
@@ -301,10 +310,10 @@ const goBack = () => {
 
                             <div>
                                 <p class="text-[11px] uppercase tracking-wide text-slate-400">
-                                    Domisili
+                                    Alamat
                                 </p>
                                 <p class="text-[13px]">
-                                    {{ person.domisili }}
+                                    {{ person?.address }}
                                 </p>
                             </div>
                             <div>
@@ -313,17 +322,17 @@ const goBack = () => {
                                 </p>
                                 <div class="flex items-center justify-between">
                                     <p class="text-[13px]">
-                                        <span v-if="showSensitiveInfo.phoneNumber">
-                                            {{ person.telepon }}
+                                        <span v-if="showSensitiveInfo.phone">
+                                            {{ person?.phone }}
                                         </span>
                                         <span v-else class="text-slate-400">
                                             {{ maskedText(10) }}
                                         </span>
                                     </p>
 
-                                    <button @click="showSensitiveInfo.phoneNumber = !showSensitiveInfo.phoneNumber"
+                                    <button @click="showSensitiveInfo.phone = !showSensitiveInfo.phone"
                                         class="text-slate-400 hover:text-slate-600">
-                                        {{ showSensitiveInfo.phoneNumber ? '🙈' : '👁️' }}
+                                        {{ showSensitiveInfo.phone ? '🙈' : '👁️' }}
                                     </button>
                                 </div>
                             </div>
@@ -343,7 +352,7 @@ const goBack = () => {
                                     ID Pekerja
                                 </p>
                                 <p class="text-[13px] font-medium">
-                                    {{ person.employeeId }}
+                                    {{ person?.employId }}
                                 </p>
                             </div>
                             <div>
@@ -351,7 +360,7 @@ const goBack = () => {
                                     Status Pekerja
                                 </p>
                                 <p class="text-[13px]">
-                                    {{ person.statusPekerja }}
+                                    {{ person?.employmentStatus }}
                                 </p>
                             </div>
                             <div>
@@ -359,7 +368,7 @@ const goBack = () => {
                                     Bergabung
                                 </p>
                                 <p class="text-[13px]">
-                                    {{ person.tahunBergabung }}
+                                    {{ person?.yearJoined }}
                                 </p>
                             </div>
                             <div>
@@ -367,7 +376,7 @@ const goBack = () => {
                                     Mengabdi
                                 </p>
                                 <p class="text-[13px]">
-                                    {{ hitungMasaKerja(person.tahunBergabung) }}
+                                    {{ hitungMasaKerja(person?.yearJoined) }}
                                 </p>
                             </div>
                         </div>
@@ -386,7 +395,7 @@ const goBack = () => {
                                     Usia pensiun
                                 </p>
                                 <p class="text-[13px] font-medium text-emerald-700">
-                                    {{ person.usiaPensiun }} tahun
+                                    {{ person?.retirementAge }} tahun
                                 </p>
                             </div>
 
@@ -395,7 +404,7 @@ const goBack = () => {
                                     Sisa masa kerja
                                 </p>
                                 <p class="text-[13px] font-medium text-emerald-700">
-                                    {{ hitungSisaMasaKerja(person.tanggalLahir, person.usiaPensiun) }}
+                                    {{ hitungSisaMasaKerja(person?.dateOfBirth, person?.retirementAge) }}
                                 </p>
                             </div>
 
@@ -406,7 +415,7 @@ const goBack = () => {
                                 <p class="text-[13px] font-medium">
                                     {{
                                         formatFullDate(
-                                            getTanggalPensiun(person.tanggalLahir, person.usiaPensiun)?.toISOString()
+                                            getTanggalPensiun(person?.dateOfBirth, person?.retirementAge)?.toISOString()
                                         )
                                     }}
                                 </p>
@@ -415,7 +424,7 @@ const goBack = () => {
 
 
                             <p class="text-[11px] text-slate-500 mt-1">
-                                {{ person.usiaPensiun }} Tahun adalah masa pensiun yang ditetapkan oleh perusahaan.
+                                {{ person?.retirementAge }} Tahun adalah masa pensiun yang ditetapkan oleh perusahaan.
                             </p>
                         </div>
                     </article>
@@ -430,7 +439,7 @@ const goBack = () => {
                                 Total Temuan
                             </p>
                             <p class="text-xl font-semibold text-slate-800">
-                                {{ totalTemuan }}
+                                {{ person?.countFindings || 0 }}
                             </p>
                         </div>
                         <div
@@ -446,7 +455,7 @@ const goBack = () => {
                                 Temuan Terbaru
                             </p>
                             <p class="text-sm font-medium text-slate-800">
-                                {{ formatShortDate(person.tanggalTemuanTerbaru) }}
+                                {{ person?.latestFindingDate }}
                             </p>
                         </div>
                         <div
@@ -463,8 +472,8 @@ const goBack = () => {
                             </p>
                             <p class="text-sm font-medium text-slate-800">
                                 {{
-                                    person.jumlahTemuan && person.tahunBergabung
-                                        ? (person.jumlahTemuan / (new Date().getFullYear() - person.tahunBergabung ||
+                                    person?.countFindings && person?.yearJoined
+                                        ? (person?.countFindings / (new Date().getFullYear() - person?.yearJoined ||
                                             1)).toFixed(1) +
                                         ' temuan/tahun'
                                         : '-'
@@ -488,16 +497,16 @@ const goBack = () => {
 
                         </div>
                         <p class="text-xs text-slate-500">
-                            Total: {{ totalTemuan }} temuan
+                            Total: {{ totalCountFindings }} temuan
                         </p>
                     </div>
 
-                    <div v-if="!pagedTemuan.length" class="text-sm text-gray-400 py-4">
+                    <div v-if="!pagedCountFindings.length" class="text-sm text-gray-400 py-4">
                         Belum ada temuan tercatat untuk personil ini.
                     </div>
 
                     <div v-else class="space-y-2">
-                        <div v-for="t in pagedTemuan" :key="t.id"
+                        <div v-for="t in pagedCountFindings" :key="t.id"
                             class="border rounded-xl px-3 py-2 flex justify-between items-start text-sm hover:bg-slate-50 transition">
                             <div class="pr-4">
                                 <p class="font-medium text-slate-800">

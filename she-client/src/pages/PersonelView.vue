@@ -84,9 +84,10 @@ const resetFilters = () => {
 }
 
 const handleSelectPersonel = (user) => {
+    console.log('PersonelView:Selected user:', user)
     router.push({
         name: 'PersonelDetail',
-        params: { id: user.id }
+        params: { id: user._id }
     })
 }
 </script>
