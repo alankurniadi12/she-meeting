@@ -9,6 +9,10 @@ async function findByEmailWithPassword(email) {
   return await User.findOne({ email }).select('+password');
 }
 
+async function findById(userId) {
+  return await User.findById(userId).select('-password');
+}
+
 async function createUser(payload) {
   const user = await User.create(payload);
   return user;
@@ -69,4 +73,4 @@ async function findAllUsersPaged(filter = {}, options = {}) {
   };
 }
 
-export { existsByEmail, findByEmailWithPassword, createUser, findAllUsers, findAllUsersPaged, updatedUser, incrementFindingsCount, updateLatestContribution };
+export { existsByEmail, findByEmailWithPassword, findById, createUser, findAllUsers, findAllUsersPaged, updatedUser, incrementFindingsCount, updateLatestContribution };

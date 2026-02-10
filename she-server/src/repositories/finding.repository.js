@@ -34,6 +34,10 @@ async function findAllPaged(filters = {}, options = {}) {
   };
 }
 
+async function findByUserId(userId) {
+  return await Finding.find({ user: userId }).select('_id').lean();
+}
+
 async function updateById(id, payload) {
   return await Finding.findByIdAndUpdate(id, payload, { new: true });
 }
@@ -42,4 +46,4 @@ async function deleteById(id) {
   return await Finding.findByIdAndDelete(id);
 }
 
-export { createFinding, findById, findAll, findAllPaged, updateById, deleteById };
+export { createFinding, findById, findAll, findAllPaged, findByUserId, updateById, deleteById };

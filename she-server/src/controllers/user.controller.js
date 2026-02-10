@@ -1,4 +1,4 @@
-import { getUsersService, updateUserService } from '../services/user.service.js';
+import { getUsersService, getUserByIdService, updateUserService } from '../services/user.service.js';
 
 const getUsersController = async (req, res, next) => {
   try {
@@ -9,6 +9,17 @@ const getUsersController = async (req, res, next) => {
     return res.status(result.code).json(result);
   } catch (error) {
     console.error('Error in getUsersController:', error);
+    next(error);
+  }
+};
+
+const getUserByIdController = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const result = await getUserByIdService(userId);
+    return res.status(result.code).json(result);
+  } catch (error) {
+    console.error('Error in getUserByIdController:', error);
     next(error);
   }
 };
@@ -25,4 +36,4 @@ const updateUserController = async (req, res, next) => {
   }
 };
 
-export { getUsersController, updateUserController };
+export { getUsersController, getUserByIdController, updateUserController };
