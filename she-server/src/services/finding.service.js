@@ -28,6 +28,7 @@ async function createFindingService({ description, reportedAt, division, targetD
   // increment the user's countFindings atomically
   if (userId) {
     await userRepository.incrementFindingsCount(userId, 1);
+    await userRepository.updateLatestContribution(userId, reportedAt || new Date());
   }
 
   return {

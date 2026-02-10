@@ -70,6 +70,9 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    latestContribution: {
+      type: Date,
+    },
     profilePicture: {
       type: String,
       trim: true,

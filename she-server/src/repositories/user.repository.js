@@ -34,6 +34,15 @@ async function incrementFindingsCount(userId, increment = 1) {
   return user;
 }
 
+async function updateLatestContribution(userId, latestContribution) {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: { latestContribution } },
+    { new: true }
+  ).select('-password');
+  return user;
+}
+
 
 async function findAllUsers(filter = {}) {
   // support pagination options: { page, limit, sort }
@@ -60,4 +69,4 @@ async function findAllUsersPaged(filter = {}, options = {}) {
   };
 }
 
-export { existsByEmail, findByEmailWithPassword, createUser, findAllUsers, findAllUsersPaged, updatedUser, incrementFindingsCount };
+export { existsByEmail, findByEmailWithPassword, createUser, findAllUsers, findAllUsersPaged, updatedUser, incrementFindingsCount, updateLatestContribution };
