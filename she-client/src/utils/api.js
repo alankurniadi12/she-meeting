@@ -22,17 +22,26 @@ async function request(path, options = {}) {
   const opts = { ...options }
   opts.headers = buildHeaders(opts.headers || {})
 
-  const res = await fetch(url, opts)
-  if (!res.ok) {
-    const text = await res.text()
-    const err = new Error(text || res.statusText)
-    err.status = res.status
-    throw err
-  }
+  try {
+    const res = await fetch(url, opts)
+    if (!res.ok) {
+      const text = await res.text()
+      const err = new Error(text || res.statusText)
+      err.status = res.status
+      throw err
+    }
 
-  const contentType = res.headers.get('content-type') || ''
-  if (contentType.includes('application/json')) return res.json()
-  return res.text()
+    const contentType = res.headers.get('content-type') || ''
+    if (contentType.includes('application/json')) return res.json()
+    return res.text()
+  } catch (e) {
+    // Network-level error: server down, DNS failure, CORS issue, etc.
+    if (e.message === 'Failed to fetch') {
+      throw new Error('Tidak dapat terhubung ke server API')
+    }
+    // Re-throw application errors (from !res.ok block)
+    throw e
+  }
 }
 
 export const apiGet = (path) => request(path, { method: 'GET' })

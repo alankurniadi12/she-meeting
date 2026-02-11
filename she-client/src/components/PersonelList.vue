@@ -3,7 +3,8 @@
         <div class="space-y-3 max-h-[75vh] overflow-y-auto pr-2">
             <!-- Kalau kosong -->
             <div v-if="!items || !items.length" class="text-sm text-gray-400 italic py-4 text-center">
-                Belum ada data personil.
+                <span v-if="loading">Loading...</span>
+                <span v-else-if="error">{{ error }}</span>
             </div>
 
             <!-- List item personil -->
@@ -27,7 +28,7 @@
                         </h3>
 
                         <p v-if="user.division" class="text-xs text-gray-500">
-                            {{ user.division  }}
+                            {{ user.division }}
                         </p>
 
                         <p class="text-xs text-gray-500 mt-1">
@@ -35,7 +36,7 @@
                             <span class="font-medium text-gray-700">
                                 <span v-if="!user.latestContribution">Belum Ada</span>
                                 <span v-else>
-                                {{ formatLastFindingDate(user.latestContribution) }}
+                                    {{ formatLastFindingDate(user.latestContribution) }}
                                 </span>
                             </span>
                         </p>
@@ -61,6 +62,14 @@ const props = defineProps({
     items: {
         type: Array,
         required: true
+    },
+    error: {
+        type: String,
+        default: 'Terjadi kesalahan saat memuat data personil.'
+    },
+    loading: {
+        type: Boolean,
+        default: false
     }
 })
 console.log('Props items:', props.items);

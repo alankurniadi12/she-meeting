@@ -37,12 +37,16 @@ export const useUsersStore = defineStore("users", {
     async fetchUsers() {
       this.loading = true;
       this.error = null;
+      console.log('Loading state fetchUsers RUNNING:', this.loading);
       try {
         this.users = await userService.getUsers();
+        console.log('Fetched users:', this.users);
+        
       } catch (err) {
-        this.error = err.message || "Failed to fetch users.";
+        this.error = err.message;
       } finally {
         this.loading = false;
+        console.log('Fetch users operation completed.');
       }
     },
     async fetchUserById(id) {
@@ -54,6 +58,7 @@ export const useUsersStore = defineStore("users", {
         return user;
       } catch (err) {
         this.error = err.message || "Failed to fetch user.";
+        console.error('Error fetching user:', err.message);
         throw err;
       } finally {
         this.loading = false;

@@ -47,33 +47,41 @@
         </div>
 
         <!-- List Personil -->
-        <PersonelList :items="filtersWatch" @select="handleSelectPersonel" />
+        <PersonelList :items="filtersWatch" :error="error" :loading="loading" @select="handleSelectPersonel" />
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import PersonelList from '@/components/PersonelList.vue'
-import { useUsersStore }  from '@/stores/usersStore.js'
+import { useUsersStore } from '@/stores/usersStore.js'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const usersStore = useUsersStore()
 const loading = computed(() => usersStore.loading)
+const error = computed(() => usersStore.error)
 
-onMounted(() => {
-    usersStore.fetchUsers()
+// Monitor loading state changes
+watch(loading, (newVal, oldVal) => {
+    console.log('PersonelView: loading changed from', oldVal, 'to', newVal)
+})
+
+onMounted(async () => {
+    console.log('PersonelView: onMounted START')
+    await usersStore.fetchUsers()
+    console.log('PersonelView: onMounted END')
 })
 
 const filters = ref({
     division: 'Semua',
     search: '',
     sort: 'terbanyak'
-}) 
+})
 
-const filtersWatch = computed(() => 
+const filtersWatch = computed(() =>
     usersStore.filteredUsers(filters.value)
-)  
+)
 
 const resetFilters = () => {
     filters.value = {
