@@ -48,7 +48,24 @@ async function loginService({ email, password }) {
   };
 }
 
-async function registerService({ name, email, password, position, division, role }) {
+async function registerService({
+  name,
+  email,
+  password,
+  position,
+  division,
+  role,
+  placeOfBirth,
+  dateOfBirth,
+  address,
+  phone,
+  employId,
+  company,
+  employmentStatus,
+  yearJoined,
+  retirementAge,
+  isActive
+}) {
 
   if (!name || !email || !password || !division) {
     throw new AppError('Field yang diperlukan: name, email, password, division', 400);
@@ -66,6 +83,16 @@ async function registerService({ name, email, password, position, division, role
     position,
     division,
     role,
+    placeOfBirth,
+    dateOfBirth,
+    address,
+    phone,
+    employId,
+    company,
+    employmentStatus,
+    yearJoined,
+    retirementAge,
+    isActive
   });
 
   const token = generateToken(newUser._id);
@@ -79,8 +106,17 @@ async function registerService({ name, email, password, position, division, role
       id: newUser._id,
       name: newUser.name,
       email: newUser.email,
+      placeOfBirth: newUser.placeOfBirth,
+      dateOfBirth: newUser.dateOfBirth,
+      address: newUser.address,
+      phone: newUser.phone,
+      employId: newUser.employId,
       position: newUser.position,
       division: newUser.division,
+      company: newUser.company,
+      employmentStatus: newUser.employmentStatus,
+      yearJoined: newUser.yearJoined,
+      retirementAge: newUser.retirementAge,
       isActive: newUser.isActive,
       role: newUser.role,
     },
