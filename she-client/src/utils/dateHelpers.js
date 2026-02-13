@@ -23,3 +23,10 @@ export function hitungTanggalPensiun(tanggalLahir, usiaPensiun = 53) {
   t.setFullYear(t.getFullYear() + usiaPensiun)
   return t.toISOString().split("T")[0]
 }
+
+export function formatShortDate(dateString) {
+  if (!dateString) return ''
+  const options = { weekday: 'long', day: '2-digit', month: 'short', year: 'numeric' }
+  const date = new Date(dateString)
+  return date.toLocaleDateString('id-ID', options)
+}

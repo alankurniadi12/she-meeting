@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUsersStore } from '@/stores/usersStore.js'
-import { dummyPersonil } from '@/dataDummy.js'
+import { formatShortDate } from '@/utils/dateHelpers.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -115,28 +115,6 @@ const hitungSisaMasaKerja = (tanggalLahir, usiaPensiun = 53) => {
     return `${years} tahun ${months} bulan ${days} hari`
 }
 
-const formatFullDate = (iso) => {
-    if (!iso) return '-'
-    const d = new Date(iso)
-    return d.toLocaleDateString('id-ID', {
-        weekday: 'long',
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-    })
-}
-
-const formatShortDate = (iso) => {
-    if (!iso) return '-'
-    const d = new Date(iso)
-    return d.toLocaleDateString('id-ID', {
-        weekday: 'short',
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-    })
-}
-
 const goBack = () => {
     router.back()
 }
@@ -229,7 +207,7 @@ const goBack = () => {
                                     </p>
                                     <p class="font-semibold text-[12px]">
                                         {{
-                                            formatFullDate(
+                                            formatShortDate(
                                                 getTanggalPensiun(person?.dateOfBirth, person?.retirementAge)?.toISOString()
                                             )
                                         }}
@@ -248,7 +226,7 @@ const goBack = () => {
                                         Temuan terbaru
                                     </p>
                                     <p class="font-semibold text-[12px]">
-                                        {{ formatShortDate(person?.latestFindingsDate) }}
+                                        {{ formatShortDate(person?.latestContribution) }}
                                     </p>
                                 </div>
                             </div>
@@ -273,7 +251,7 @@ const goBack = () => {
                                 <div class="flex items-center justify-between gap-2">
                                     <p class="text-[13px] font-medium text-slate-800">
                                         <span v-if="showSensitiveInfo.birthDate">
-                                            {{ person?.placeOfBirth }}, {{ formatFullDate(person?.dateOfBirth) }}
+                                            {{ person?.placeOfBirth }}, {{ formatShortDate(person?.dateOfBirth) }}
                                         </span>
                                         <span v-else class="text-slate-400">
                                             {{ maskedText(10) }}
@@ -414,7 +392,7 @@ const goBack = () => {
                                 </p>
                                 <p class="text-[13px] font-medium">
                                     {{
-                                        formatFullDate(
+                                        formatShortDate(
                                             getTanggalPensiun(person?.dateOfBirth, person?.retirementAge)?.toISOString()
                                         )
                                     }}
@@ -455,7 +433,7 @@ const goBack = () => {
                                 Temuan Terbaru
                             </p>
                             <p class="text-sm font-medium text-slate-800">
-                                {{ person?.latestFindingDate }}
+                                {{ formatShortDate(person?.latestContribution) }}
                             </p>
                         </div>
                         <div
