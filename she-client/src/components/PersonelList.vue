@@ -8,7 +8,7 @@
             </div>
 
             <!-- List item personil -->
-            <button v-for="user in items" :key="user.id" type="button"
+            <button v-for="user in items" :key="user._id || user.id" type="button"
                 class="w-full bg-gray-100 rounded-2xl px-4 py-3 flex items-center justify-between shadow-sm border text-left hover:bg-gray-200 transition-colors"
                 @click="$emit('select', user)">
                 <!-- Kiri: Foto + info dasar -->

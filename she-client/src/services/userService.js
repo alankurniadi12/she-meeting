@@ -10,6 +10,11 @@ export async function getUserById(id) {
     return res.data;
 }
 
+export async function createUser(userData) {
+    const res = await api.apiPost('/auth/register', userData);
+    return res.data;
+}
+
 export async function updateUser(id, userData) {
     const res = await api.apiPut(`/users/update/${id}`, userData);
     return res.data;
@@ -18,5 +23,6 @@ export async function updateUser(id, userData) {
 export default {
     getUsers,
     getUserById,
+    createUser,
     updateUser
 };

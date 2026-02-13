@@ -83,14 +83,17 @@ export const useUsersStore = defineStore("users", {
     },
 
     async addUser(payload) {
+      console.log('Adding user with payload:', payload);
       this.loading = true;
       this.error = null;
       try {
         const newUser = await userService.createUser(payload);
-        this.users.push(newUser);
+        console.log('New user created:', newUser);
+        // Tidak perlu push ke array karena akan di-refresh dengan fetchUsers()
         return newUser;
       } catch (err) {
         this.error = err.message || "Failed to add user.";
+        console.error('Add user error:', err);
         throw err;
       } finally {
         this.loading = false;

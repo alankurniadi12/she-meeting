@@ -3,7 +3,7 @@
         <!-- Judul + tombol -->
         <div class="flex items-center justify-between mt-4 mb-4">
             <h1 class="text-2xl font-semibold text-gray-800">Kontribusi Personil</h1>
-            <button class="px-4 py-2 bg-green-600 text-white rounded-xl shadow hover:bg-green-700">
+            <button @click="openAddModal" class="px-4 py-2 bg-green-600 text-white rounded-xl shadow hover:bg-green-700 transition font-medium">
                 + Tambah Personil
             </button>
         </div>
@@ -48,12 +48,16 @@
 
         <!-- List Personil -->
         <PersonelList :items="filtersWatch" :error="error" :loading="loading" @select="handleSelectPersonel" />
+
+        <!-- Add Personel Modal -->
+        <AddPersonelModal :open="showAddModal" @close="showAddModal = false" @submitted="onPersonelAdded" @error="handleModalError" />
     </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import PersonelList from '@/components/PersonelList.vue'
+import AddPersonelModal from '@/pages/AddPersonelModal.vue'
 import { useUsersStore } from '@/stores/usersStore.js'
 import { useRouter } from 'vue-router'
 
@@ -61,6 +65,9 @@ const router = useRouter()
 const usersStore = useUsersStore()
 const loading = computed(() => usersStore.loading)
 const error = computed(() => usersStore.error)
+
+// Modal state
+const showAddModal = ref(false)
 
 // Monitor loading state changes
 watch(loading, (newVal, oldVal) => {
@@ -89,6 +96,23 @@ const resetFilters = () => {
         search: '',
         sort: 'terbanyak'
     }
+}
+
+const openAddModal = () => {
+    showAddModal.value = true
+}
+
+const onPersonelAdded = async (newPersonel) => {
+    console.log('Personel baru ditambahkan:', newPersonel)
+    // Refresh daftar personel setelah modal tertutup
+    setTimeout(async () => {
+        await usersStore.fetchUsers()
+    }, 100)
+}
+
+const handleModalError = (errorMessage) => {
+    console.error('Error dari modal:', errorMessage)
+    // Bisa menampilkan toast notification di sini jika ada
 }
 
 const handleSelectPersonel = (user) => {
