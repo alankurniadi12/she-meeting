@@ -2,11 +2,13 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUsersStore } from '@/stores/usersStore.js'
+import { useFindingStore } from '@/stores/findingStore.js'
 import { formatShortDate } from '@/utils/dateHelpers.js'
 
 const route = useRoute()
 const router = useRouter()
 const usersStore = useUsersStore()
+const findingStore = useFindingStore()
 
 const idUser = route.params.id
 console.log('PersonelDetailView: route param id =', idUser)
@@ -20,31 +22,82 @@ const showSensitiveInfo = ref({
 const maskedText = (length = 6) => '*'.repeat(length);
 
 onMounted(async () => {
-    await usersStore.fetchUserById(idUser)
+    await Promise.all([
+        usersStore.fetchUserById(idUser),
+        findingStore.items.length ? Promise.resolve() : findingStore.fetchFindings()
+    ])
 })
 
 const person = computed(() =>
     usersStore.selectedUser
 )
 
-console.log('PersonelDetailView: person name =', person.value?.name)
-
 const page = ref(1)
 const pageSize = 10
 
 const findingsList = computed(() =>
-    person.value?.findings || person.value?.temuan || []
+    person.value?.findings || []
 )
-const totalCountFindings = computed(() => findingsList.value.length)
+
+const findingsById = computed(() => {
+    const map = new Map()
+    findingStore.items.forEach((item) => {
+        const key = item?.id || item?._id
+        if (key !== undefined && key !== null) map.set(key, item)
+    })
+    return map
+})
+
+const resolvedFindings = computed(() =>
+    findingsList.value
+        .map((item) => {
+            const itemId = item && typeof item === 'object' ? (item.id || item._id) : item
+            const raw = (item && typeof item === 'object')
+                ? (item.description || item.judul || item.title || item.date || item.status
+                    ? item
+                    : findingsById.value.get(itemId))
+                : findingsById.value.get(itemId)
+
+            if (!raw) {
+                return { id: itemId, judul: 'Temuan tidak ditemukan', status: 'Draf', date: null }
+            }
+
+            const normalizedStatus = raw.status === 'progress'
+                ? 'Proses'
+                : raw.status === 'done'
+                    ? 'Selesai'
+                    : raw.status || 'Draf'
+
+            return {
+                ...raw,
+                id: raw.id || raw._id || itemId,
+                judul: raw.judul || raw.description || raw.title || 'Temuan tanpa judul',
+                date: raw.reportedAt || raw.date || raw.createdAt || raw.created_at || null,
+                status: normalizedStatus
+            }
+        })
+        .filter((item) => item && (item.id || item._id))
+        .sort((a, b) => {
+            const da = a?.date ? new Date(a.date).getTime() : 0
+            const db = b?.date ? new Date(b.date).getTime() : 0
+            return db - da
+        })
+)
+
+console.log('PersonelDetailView: findingsList =', resolvedFindings.value)
+
+const totalCountFindings = computed(() => resolvedFindings.value.length)
 const totalPages = computed(() =>
     Math.max(1, Math.ceil(totalCountFindings.value / pageSize))
 )
 
 const pagedCountFindings = computed(() => {
-    if (!findingsList.value.length) return []
+    if (!resolvedFindings.value.length) return []
     const start = (page.value - 1) * pageSize
-    return findingsList.value.slice(start, start + pageSize)
+    return resolvedFindings.value.slice(start, start + pageSize)
 })
+
+console.log('PersonelDetailView: totalCountFindings =', pagedCountFindings.value.length)
 
 // umur
 const hitungUmur = (tanggalLahir) => {
@@ -488,10 +541,10 @@ const goBack = () => {
                             class="border rounded-xl px-3 py-2 flex justify-between items-start text-sm hover:bg-slate-50 transition">
                             <div class="pr-4">
                                 <p class="font-medium text-slate-800">
-                                    {{ t.judul }}
+                                    {{ t.description }}
                                 </p>
                                 <p class="text-xs text-slate-500 mt-1">
-                                    {{ formatShortDate(t.date) }}
+                                    {{ formatShortDate(t.reportedAt) }}
                                 </p>
                             </div>
                             <span class="px-3 py-1 text-xs rounded-full font-medium whitespace-nowrap" :class="{
