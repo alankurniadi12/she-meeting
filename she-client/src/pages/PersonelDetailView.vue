@@ -470,7 +470,7 @@ const goBack = () => {
                                 Total Temuan
                             </p>
                             <p class="text-xl font-semibold text-slate-800">
-                                {{ person?.countFindings || 0 }}
+                                {{ totalCountFindings }}
                             </p>
                         </div>
                         <div
@@ -503,8 +503,8 @@ const goBack = () => {
                             </p>
                             <p class="text-sm font-medium text-slate-800">
                                 {{
-                                    person?.countFindings && person?.yearJoined
-                                        ? (person?.countFindings / (new Date().getFullYear() - person?.yearJoined ||
+                                    totalCountFindings && person?.yearJoined
+                                        ? (totalCountFindings / (new Date().getFullYear() - person?.yearJoined ||
                                             1)).toFixed(1) +
                                         ' temuan/tahun'
                                         : '-'
