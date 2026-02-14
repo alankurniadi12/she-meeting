@@ -1,6 +1,6 @@
 <template>
-    <div class="mt-6 mr-6">
-        <div class="space-y-3 max-h-[75vh] overflow-y-auto pr-2">
+    <div class="mt-6 ml-6 mr-6">
+        <div class="space-y-4">
             <!-- Kalau kosong -->
             <div v-if="!items || !items.length" class="text-sm text-gray-400 italic py-4 text-center">
                 <span v-if="loading">Loading...</span>

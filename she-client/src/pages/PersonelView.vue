@@ -47,7 +47,34 @@
         </div>
 
         <!-- List Personil -->
-        <PersonelList :items="filtersWatch" :error="error" :loading="loading" @select="handleSelectPersonel" />
+        <PersonelList :items="paginatedPersonel" :error="error" :loading="loading" @select="handleSelectPersonel" />
+
+        <div class="grid grid-cols-3 items-center mt-6">
+            <div></div>
+            <div v-if="totalPages > 1" class="flex justify-center items-center gap-2">
+                <!-- Prev -->
+                <button class="px-3 py-1 text-sm border rounded-lg" :disabled="currentPage === 1" @click="currentPage--">
+                    ←
+                </button>
+
+                <!-- Page number -->
+                <button v-for="page in totalPages" :key="page" @click="currentPage = page"
+                    class="px-3 py-1 text-sm border rounded-lg" :class="page === currentPage
+                        ? 'bg-green-600 text-white border-green-600'
+                        : 'hover:bg-gray-100'">
+                    {{ page }}
+                </button>
+
+                <!-- Next -->
+                <button class="px-3 py-1 text-sm border rounded-lg" :disabled="currentPage === totalPages"
+                    @click="currentPage++">
+                    →
+                </button>
+            </div>
+            <div class="flex justify-end text-sm text-gray-600">
+                Total {{ filteredUsers.length }}
+            </div>
+        </div>
 
         <!-- Add Personel Modal -->
         <AddPersonelModal :open="showAddModal" @close="showAddModal = false" @submitted="onPersonelAdded" @error="handleModalError" />
@@ -86,9 +113,20 @@ const filters = ref({
     sort: 'terbanyak'
 })
 
-const filtersWatch = computed(() =>
-    usersStore.filteredUsers(filters.value)
-)
+const currentPage = ref(1)
+const perPage = 10
+
+const filteredUsers = computed(() => usersStore.filteredUsers(filters.value))
+
+const totalPages = computed(() => {
+    return Math.ceil(filteredUsers.value.length / perPage)
+})
+
+const paginatedPersonel = computed(() => {
+    const start = (currentPage.value - 1) * perPage
+    const end = start + perPage
+    return filteredUsers.value.slice(start, end)
+})
 
 const resetFilters = () => {
     filters.value = {
@@ -97,6 +135,14 @@ const resetFilters = () => {
         sort: 'terbanyak'
     }
 }
+
+watch(currentPage, () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+})
+
+watch(filteredUsers, () => {
+    currentPage.value = 1
+})
 
 const openAddModal = () => {
     showAddModal.value = true

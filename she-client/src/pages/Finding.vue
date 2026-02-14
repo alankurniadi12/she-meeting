@@ -107,25 +107,31 @@
         <!-- List temuan -->
         <ItemList :items="paginatedTemuan" :showSeeAll="false" />
 
-        <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-6">
-            <!-- Prev -->
-            <button class="px-3 py-1 text-sm border rounded-lg" :disabled="currentPage === 1" @click="currentPage--">
-                ←
-            </button>
+        <div class="grid grid-cols-3 items-center mt-6">
+            <div></div>
+            <div v-if="totalPages > 1" class="flex justify-center items-center gap-2">
+                <!-- Prev -->
+                <button class="px-3 py-1 text-sm border rounded-lg" :disabled="currentPage === 1" @click="currentPage--">
+                    ←
+                </button>
 
-            <!-- Page number -->
-            <button v-for="page in totalPages" :key="page" @click="currentPage = page"
-                class="px-3 py-1 text-sm border rounded-lg" :class="page === currentPage
-                    ? 'bg-green-600 text-white border-green-600'
-                    : 'hover:bg-gray-100'">
-                {{ page }}
-            </button>
+                <!-- Page number -->
+                <button v-for="page in totalPages" :key="page" @click="currentPage = page"
+                    class="px-3 py-1 text-sm border rounded-lg" :class="page === currentPage
+                        ? 'bg-green-600 text-white border-green-600'
+                        : 'hover:bg-gray-100'">
+                    {{ page }}
+                </button>
 
-            <!-- Next -->
-            <button class="px-3 py-1 text-sm border rounded-lg" :disabled="currentPage === totalPages"
-                @click="currentPage++">
-                →
-            </button>
+                <!-- Next -->
+                <button class="px-3 py-1 text-sm border rounded-lg" :disabled="currentPage === totalPages"
+                    @click="currentPage++">
+                    →
+                </button>
+            </div>
+            <div class="flex justify-end text-sm text-gray-600">
+                Total {{ filteredTemuan.length }}
+            </div>
         </div>
 
     </div>
