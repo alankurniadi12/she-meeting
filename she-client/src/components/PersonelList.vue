@@ -8,11 +8,16 @@
             </div>
 
             <!-- List item personil -->
-            <button v-for="user in items" :key="user._id || user.id" type="button"
+            <button v-for="(user, index) in items" :key="user._id || user.id" type="button"
                 class="w-full bg-gray-100 rounded-2xl px-4 py-3 flex items-center justify-between shadow-sm border text-left hover:bg-gray-200 transition-colors"
                 @click="$emit('select', user)">
                 <!-- Kiri: Foto + info dasar -->
                 <div class="flex items-center space-x-3">
+                    <!-- Nomor urut -->
+                    <div class="flex-shrink-0 w-8 text-center">
+                        <span class="text-sm font-bold text-gray-600">{{ getItemNumber(index) }}</span>
+                    </div>
+                    
                     <!-- Avatar -->
                     <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
                         <img v-if="user.foto" :src="user.foto" alt="Foto personil" class="w-full h-full object-cover" />
@@ -70,9 +75,22 @@ const props = defineProps({
     loading: {
         type: Boolean,
         default: false
+    },
+    currentPage: {
+        type: Number,
+        default: 1
+    },
+    itemsPerPage: {
+        type: Number,
+        default: 10
     }
 })
 console.log('Props items:', props.items);
+
+// Hitung nomor urut berdasarkan halaman pagination
+const getItemNumber = (index) => {
+    return (props.currentPage - 1) * props.itemsPerPage + index + 1
+}
 
 // format: Rabu, 10 Des 2025
 const formatLastFindingDate = (iso) => {

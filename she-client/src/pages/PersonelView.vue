@@ -47,7 +47,8 @@
         </div>
 
         <!-- List Personil -->
-        <PersonelList :items="paginatedPersonel" :error="error" :loading="loading" @select="handleSelectPersonel" />
+        <PersonelList :items="paginatedPersonel" :error="error" :loading="loading" 
+            :current-page="currentPage" :items-per-page="perPage" @select="handleSelectPersonel" />
 
         <div class="grid grid-cols-3 items-center mt-6">
             <div></div>
