@@ -39,16 +39,18 @@
 
                             <!-- Tempat Lahir -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Tempat Lahir</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tempat Lahir <span class="text-red-500">*</span></label>
                                 <input v-model="form.placeOfBirth" type="text" placeholder="Kota/Kabupaten"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    required />
                             </div>
 
                             <!-- Tanggal Lahir -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir <span class="text-red-500">*</span></label>
                                 <input v-model="form.dateOfBirth" type="date"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    required />
                             </div>
 
                             <!-- Telepon -->
@@ -62,9 +64,17 @@
                             <!-- Password -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Password <span class="text-red-500">*</span></label>
-                                <input v-model="form.password" type="password" placeholder="Minimal 8 karakter"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    required />
+                                <div class="relative">
+                                    <input v-model="form.password" :type="showPassword ? 'text' : 'password'" placeholder="Minimal 8 karakter"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        required />
+                                    <button type="button" @click="showPassword = !showPassword"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                        title="Toggle password visibility">
+                                        <span v-if="showPassword">👁️</span>
+                                        <span v-else>👁️‍🗨️</span>
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Alamat -->
@@ -86,10 +96,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Nomor ID -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">ID Karyawan <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ID Karyawan</label>
                                 <input v-model="form.employId" type="text" placeholder="Contoh: ICT-001"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    required />
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" />
                             </div>
 
                             <!-- Posisi/Jabatan -->
@@ -238,12 +247,14 @@ const emit = defineEmits(['close', 'submitted', 'error'])
 const usersStore = useUsersStore()
 const loading = ref(false)
 const errors = ref({})
+const showPassword = ref(false)
 
 // Reset loading jika modal ditutup secara paksa
 watch(() => props.open, (newVal) => {
     if (!newVal) {
         loading.value = false
         errors.value = {}
+        showPassword.value = false
     }
 })
 
@@ -277,6 +288,12 @@ const validateForm = () => {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email)) {
         errors.value.email = 'Format email tidak valid'
     }
+    if (!form.value.placeOfBirth.trim()) {
+        errors.value.placeOfBirth = 'Tempat lahir harus diisi'
+    }
+    if (!form.value.dateOfBirth) {
+        errors.value.dateOfBirth = 'Tanggal lahir harus diisi'
+    }
     if (!form.value.phone.trim()) {
         errors.value.phone = 'Nomor telepon harus diisi'
     }
@@ -284,9 +301,6 @@ const validateForm = () => {
         errors.value.password = 'Password harus diisi'
     } else if (form.value.password.length < 8) {
         errors.value.password = 'Password minimal 8 karakter'
-    }
-    if (!form.value.employId.trim()) {
-        errors.value.employId = 'ID Karyawan harus diisi'
     }
     if (!form.value.position.trim()) {
         errors.value.position = 'Posisi/Jabatan harus diisi'
@@ -346,6 +360,7 @@ const onSubmit = async () => {
             isActive: 'true',
             role: 'user'
         }
+        showPassword.value = false
         
         // Emit submitted dan close
         emit('submitted', created)

@@ -17,6 +17,8 @@
                     class="border rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring focus:ring-green-200">
                     <option value="Semua">Semua</option>
                     <option value="ICT">ICT</option>
+                    <option value="Camp">Camp</option>
+                    <option value="CSR">CSR</option>
                     <option value="Facility">Facility</option>
                     <option value="Security">Security</option>
                     <option value="Produksi">Produksi</option>
